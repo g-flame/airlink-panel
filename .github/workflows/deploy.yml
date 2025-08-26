@@ -71,11 +71,42 @@ jobs:
             version: '1.0.0',
             isDev: false,
             csrfToken: 'static-build-token',
-            // Add any other variables your templates might need
+            // Mock request object
+            req: {
+              query: {},
+              translations: {
+                userAccountTitle: 'Account',
+                adminUsersTitle: 'Users', 
+                adminSettingsTitle: 'Settings',
+                adminServersTitle: 'Servers',
+                adminNodesTitle: 'Nodes',
+                adminAnalyticsTitle: 'Analytics',
+                adminApiKeysTitle: 'API Keys',
+                adminAddonsTitle: 'Addons'
+              }
+            },
+            // Mock settings object
+            settings: {
+              title: 'Airlink Panel',
+              logo: '/assets/logo.png',
+              theme: 'dark',
+              version: '1.0.0'
+            },
+            // Mock data arrays
             servers: [],
             nodes: [],
-            stats: {},
-            settings: {}
+            users: [],
+            stats: {
+              totalServers: 0,
+              totalUsers: 0,
+              totalNodes: 0
+            },
+            // Mock features
+            features: {
+              analytics: true,
+              apiKeys: true,
+              addons: true
+            }
           };
           
           // Template mappings (EJS file -> output HTML file)
@@ -108,6 +139,9 @@ jobs:
           };
           
           // Process each template
+          let successCount = 0;
+          let errorCount = 0;
+          
           templateMappings.forEach(({ input, output }) => {
             try {
               if (fs.existsSync(input)) {
@@ -119,19 +153,56 @@ jobs:
                 const template = fs.readFileSync(input, 'utf8');
                 const html = ejs.render(template, mockData, {
                   filename: input,
-                  views: ['views', 'views/components'],
-                  root: process.cwd()
+                  views: ['views', 'views/components', 'views/admin', 'views/user', 'views/auth'],
+                  root: process.cwd(),
+                  rmWhitespace: false,
+                  debug: false
                 });
                 
                 fs.writeFileSync(output, html);
                 console.log(`✓ Generated ${output}`);
+                successCount++;
               } else {
                 console.log(`⚠ Template not found: ${input}`);
               }
             } catch (error) {
               console.error(`✗ Error processing ${input}:`, error.message);
+              errorCount++;
+              
+              // Create a fallback page for failed templates
+              ensureDir(output);
+              const fallbackHTML = `
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Airlink Panel - ${path.basename(output, '.html')}</title>
+                  <link rel="stylesheet" href="../styles.css">
+                  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+              </head>
+              <body class="bg-gray-900 text-white">
+                  <div class="min-h-screen flex items-center justify-center">
+                      <div class="text-center">
+                          <h1 class="text-3xl font-bold mb-4">Airlink Panel</h1>
+                          <p class="text-gray-300 mb-4">${path.basename(output, '.html').toUpperCase()} Page</p>
+                          <p class="text-sm text-gray-500">This page is under construction for the static demo.</p>
+                          <div class="mt-8">
+                              <a href="../index.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded">← Back to Home</a>
+                          </div>
+                      </div>
+                  </div>
+              </body>
+              </html>`;
+              fs.writeFileSync(output, fallbackHTML);
+              console.log(`📄 Created fallback page: ${output}`);
             }
           });
+          
+          console.log(`\n📊 Template Processing Summary:`);
+          console.log(`✅ Successful: ${successCount}`);
+          console.log(`❌ Failed: ${errorCount}`);
+          console.log(`📄 Total: ${templateMappings.length}`);
           
           // Create a simple index page if main index fails
           if (!fs.existsSync('static-site/index.html')) {
