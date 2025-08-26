@@ -22,11 +22,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+      - name: Update Node.js versions
+  # You may pin to the exact commit or the version.
+  # uses: hongaar/update-node-versions@9fe180c8bcd7b577f5e625d82d361f8ee8bcc4e2
+  uses: hongaar/update-node-versions@v2.2.0
+  with:
+    # Node versions to select
+    versions: # default is latest
+lts
+lts/-1
+lts/-2
+
+    # Filter out Node versions which are end-of-life
+    versions.filter-eol: # optional, default is true
+    # Update GitHub workflows
+    updaters.workflows: # optional, default is true
+    # Update GitHub workflows
+    updaters.workflows.variable: # optional, default is node-version
+    # Update package.json `engines`
+    updaters.engines: # optional, default is true
+    # Update arbitrary files
+    updaters.files: # optional
+    # Glob pattern for files to update
+    updaters.files.glob: # optional
+    # Matches will be replaced with the template
+    updaters.files.regex: # optional
+    # Replace matches with this template
+    updaters.files.template: # optional
+          
 
       - name: Install dependencies
         run: npm install
