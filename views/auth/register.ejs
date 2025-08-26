@@ -3,7 +3,7 @@
 <style>
   /* Mobile background visible under the card; removed on lg+ for desktop side image */
   .mobile-bg {
-    background-image: url('https://i.imgur.com/8G5eRWX.jpeg');
+    background-image: url('https://img.freepik.com/free-vector/natural-landscape-wallpaper-concept_23-2148650600.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -91,13 +91,21 @@
             <% } %>
 
             <!-- Username -->
-            <div>
-              <label for="username" class="block text-sm font-medium text-neutral-300">Username</label>
-              <div class="mt-1">
-                <input placeholder="example" id="username" name="username" autocomplete="username" required
-                  class="appearance-none block w-full px-3 py-2 bg-white text-neutral-900 border border-neutral-300 rounded-xl placeholder-neutral-400 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 transition sm:text-sm">
+            <label for="username" class="block text-sm font-medium text-neutral-300">Username</label>  
+              <div class="mt-1">  
+                <input type="text"  
+                  placeholder="example"  
+                  id="username"  
+                  name="username"  
+                  autocomplete="username"  
+                  required  
+                  minlength="3"  
+                  maxlength="20"  
+                  pattern="[A-Za-z0-9]{3,20}"  
+                  inputmode="text"  
+                  autocapitalize="none"  
+                  class="appearance-none block w-full px-3 py-2 bg-white text-neutral-900 border border-neutral-300 rounded-xl placeholder-neutral-400 focus:outline-none focus:ring-neutral-500 focus:border-neutral-500 transition sm:text-sm">  
               </div>
-            </div>
 
             <!-- Email -->
             <div>

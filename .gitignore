@@ -21,8 +21,6 @@ prisma/*
 # Coverage reports
 coverage/
 
-# .env
-.env
-*.env.*
+
 
 bun.lock
