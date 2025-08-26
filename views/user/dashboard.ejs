@@ -169,41 +169,110 @@
           </div>
 
           <!-- List View -->
-          <div id="listView" class="overflow-hidden shadow ring-1 ring-gray-200 dark:ring-white/5 rounded-lg bg-white dark:bg-transparent hidden">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-white/10">
-              <thead class="bg-gray-50 dark:bg-white/5">
-                <tr>
-                  <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6">Server</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">RAM Usage</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">CPU Usage</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200 dark:divide-white/10 bg-gray-50 dark:bg-white/5">
-                <% servers.forEach(server => { %>
-                  <tr onclick="window.location.href = '../server/<%= server.UUID %>';" class="hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer">
-                    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6"><%= server.name %></td>
-                    <td class="px-3 py-4 text-sm">
-                      <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md shadow-sm
-                          <%= server.status === 'running' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' %>">
-                        <span class="relative flex h-2 w-2 mr-1.5">
-                          <% if (server.status === 'running') { %>
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                          <% } else { %>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                          <% } %>
-                        </span>
-                        <%= server.status === 'running' ? 'Running' : 'Stopped' %>
-                      </span>
-                    </td>
-                    <td class="px-3 py-4 text-sm text-gray-700 dark:text-neutral-300"><span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm"><%= server.ramUsage %>%</span></td>
-                    <td class="px-3 py-4 text-sm text-gray-700 dark:text-neutral-300"><span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm"><%= server.cpuUsage %>%</span></td>
-                  </tr>
-                <% }); %>
-              </tbody>
-            </table>
+          <!-- List View -->
+<div id="listView" class="overflow-hidden shadow ring-1 ring-gray-200 dark:ring-white/5 rounded-lg bg-white dark:bg-transparent hidden">
+  
+  <!-- Desktop Table (hidden on mobile) -->
+  <div id="listDesktopTable" class="hidden sm:block">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-white/10">
+      <thead class="bg-gray-50 dark:bg-white/5">
+        <tr>
+          <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6">Server</th>
+          <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+          <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">RAM Usage</th>
+          <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">CPU Usage</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-white/10 bg-gray-50 dark:bg-white/5">
+        <% servers.forEach(server => { %>
+          <tr onclick="window.location.href = '../server/<%= server.UUID %>';" class="hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer">
+            <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6"><%= server.name %></td>
+            <td class="px-3 py-4 text-sm">
+              <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md shadow-sm
+                  <%= server.status === 'running' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' %>">
+                <span class="relative flex h-2 w-2 mr-1.5">
+                  <% if (server.status === 'running') { %>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <% } else { %>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                  <% } %>
+                </span>
+                <%= server.status === 'running' ? 'Running' : 'Stopped' %>
+              </span>
+            </td>
+            <td class="px-3 py-4 text-sm text-gray-700 dark:text-neutral-300"><span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm"><%= server.ramUsage %>%</span></td>
+            <td class="px-3 py-4 text-sm text-gray-700 dark:text-neutral-300"><span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm"><%= server.cpuUsage %>%</span></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Cards (hidden on desktop) -->
+  <div id="listMobileCards" class="block sm:hidden p-4 space-y-4">
+    <% servers.forEach(server => { %>
+      <div onclick="window.location.href = '../server/<%= server.UUID %>';" class="bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer">
+        
+        <!-- Server Name -->
+        <div class="mb-3">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white"><%= server.name %></h3>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3 flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-700 dark:text-neutral-300">Status:</span>
+          <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md shadow-sm
+              <%= server.status === 'running' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' %>">
+            <span class="relative flex h-2 w-2 mr-1.5">
+              <% if (server.status === 'running') { %>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <% } else { %>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+              <% } %>
+            </span>
+            <%= server.status === 'running' ? 'Running' : 'Stopped' %>
+          </span>
+        </div>
+
+        <!-- Resource Usage -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700 dark:text-neutral-300">RAM:</span>
+            <span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm text-sm text-gray-700 dark:text-neutral-300"><%= server.ramUsage %>%</span>
           </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700 dark:text-neutral-300">CPU:</span>
+            <span class="border border-gray-200 dark:border-neutral-700/30 bg-gray-50 dark:bg-neutral-800/50 px-2.5 py-1 rounded-md shadow-sm text-sm text-gray-700 dark:text-neutral-300"><%= server.cpuUsage %>%</span>
+          </div>
+        </div>
+
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<script>
+function toggleListViewMobile() {
+  const listMobileCards = document.getElementById('listMobileCards');
+  const listDesktopTable = document.getElementById('listDesktopTable');
+  
+  if (window.innerWidth >= 640) {
+    if (listMobileCards) listMobileCards.style.display = 'none';
+    if (listDesktopTable) listDesktopTable.style.display = 'block';
+  } else {
+    if (listMobileCards) listMobileCards.style.display = 'block';
+    if (listDesktopTable) listDesktopTable.style.display = 'none';
+  }
+}
+
+// Initialize on page load
+toggleListViewMobile();
+
+// Handle window resize
+window.addEventListener('resize', toggleListViewMobile);
+</script>
 
 
           <!-- Paginator -->

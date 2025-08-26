@@ -1,14 +1,14 @@
 <%- include('../../components/header', { title: 'Files' }) %>
 <main class="h-screen m-auto">
   <div class="flex h-screen">
-      <!-- Sidebar -->
-<div class="hidden sm:block w-60 h-full">
-  <%- include('../../components/template') %>
-</div>
+    <!-- Sidebar -->
+    <div class="hidden sm:block w-60 h-full">
+      <%- include('../../components/template') %>
+    </div>
 
-<!-- Mobile button -->
+    <!-- Mobile button -->
     <div class="block lg:hidden">
-    <%- include('../../components/mobile') %>
+      <%- include('../../components/mobile') %>
     </div>
     <div class="flex-1 p-6 overflow-y-auto pt-16">
       <div class="sm:flex sm:items-center px-8 pt-4">
@@ -46,7 +46,7 @@
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-lg font-medium text-neutral-900 dark:text-white">
                 <a class="text-neutral-300 hover:text-neutral-200 transition" href="/server/<%= server.UUID %>/files">/app/data/</a>
-              <%
+                <%
                   if (file.path) {
                       const parts = file.path.split('/');
                       let currentPath = '';
@@ -56,13 +56,13 @@
 
                           if (index < parts.length - 1) {
                               %>
-                              <a href="/server/<%= server.UUID %>/files?path=<%= currentPath %>" class="text-neutral-300 hover:text-neutral-200 transition"><%= part %></a>/
-                              <%
+                <a href="/server/<%= server.UUID %>/files?path=<%= currentPath %>" class="text-neutral-300 hover:text-neutral-200 transition"><%= part %></a>/
+                <%
                               currentPath += '/';
                           } else {
                               %>
-                              <span class="text-neutral-100"><%= part %></span>
-                              <%
+                <span class="text-neutral-100"><%= part %></span>
+                <%
                           }
                       });
                   }
@@ -156,15 +156,25 @@
   let vimModeEnabled = false;
   let themeMode = 'auto'; // 'auto', 'light', or 'dark'
 
-  require(['vs/editor/editor.main', 'monaco-vim'], function (_, MonacoVim) {
+  require(['vs/editor/editor.main', 'monaco-vim'], function(_, MonacoVim) {
     // Define custom themes
     monaco.editor.defineTheme('custom-dark', {
       base: 'vs-dark',
       inherit: true,
-      rules: [
-        { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
-        { token: 'keyword', foreground: 'C586C0', fontStyle: 'bold' },
-        { token: 'string', foreground: 'CE9178' }
+      rules: [{
+          token: 'comment',
+          foreground: '6A9955',
+          fontStyle: 'italic'
+        },
+        {
+          token: 'keyword',
+          foreground: 'C586C0',
+          fontStyle: 'bold'
+        },
+        {
+          token: 'string',
+          foreground: 'CE9178'
+        }
       ],
       colors: {
         'editor.background': '#1E1E1E',
@@ -180,10 +190,20 @@
     monaco.editor.defineTheme('custom-light', {
       base: 'vs',
       inherit: true,
-      rules: [
-        { token: 'comment', foreground: '008000', fontStyle: 'italic' },
-        { token: 'keyword', foreground: '0000FF', fontStyle: 'bold' },
-        { token: 'string', foreground: 'A31515' }
+      rules: [{
+          token: 'comment',
+          foreground: '008000',
+          fontStyle: 'italic'
+        },
+        {
+          token: 'keyword',
+          foreground: '0000FF',
+          fontStyle: 'bold'
+        },
+        {
+          token: 'string',
+          foreground: 'A31515'
+        }
       ],
       colors: {
         'editor.background': '#FFFFFF',
@@ -276,14 +296,20 @@
     // Toggle word wrap
     document.getElementById('toggle-wordwrap').addEventListener('click', function() {
       wordWrapEnabled = !wordWrapEnabled;
-      editor.updateOptions({ wordWrap: wordWrapEnabled ? 'on' : 'off' });
+      editor.updateOptions({
+        wordWrap: wordWrapEnabled ? 'on' : 'off'
+      });
       this.textContent = wordWrapEnabled ? 'On' : 'Off';
     });
 
     // Toggle minimap
     document.getElementById('toggle-minimap').addEventListener('click', function() {
       minimapEnabled = !minimapEnabled;
-      editor.updateOptions({ minimap: { enabled: minimapEnabled } });
+      editor.updateOptions({
+        minimap: {
+          enabled: minimapEnabled
+        }
+      });
       this.textContent = minimapEnabled ? 'On' : 'Off';
     });
 
@@ -297,7 +323,9 @@
       } else {
         theme = 'custom-light';
       }
-      editor.updateOptions({ theme: theme });
+      editor.updateOptions({
+        theme: theme
+      });
     }
 
     // Toggle theme button
@@ -385,7 +413,11 @@
             }
           });
 
-          observer.observe(statusNode, { childList: true, subtree: true, characterData: true });
+          observer.observe(statusNode, {
+            childList: true,
+            subtree: true,
+            characterData: true
+          });
 
         } catch (e) {
           console.error('Error initializing Vim mode:', e);
@@ -423,7 +455,9 @@
       });
     });
 
-    darkModeObserver.observe(document.documentElement, { attributes: true });
+    darkModeObserver.observe(document.documentElement, {
+      attributes: true
+    });
   });
 
 
@@ -446,7 +480,9 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({
+          content
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to save file');
@@ -491,7 +527,9 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({
+            content
+          }),
         });
 
         if (!response.ok) throw new Error('Failed to save file');

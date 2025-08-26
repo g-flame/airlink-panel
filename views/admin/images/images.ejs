@@ -39,46 +39,104 @@
       </div>
 
       <!-- Images Table -->
-      <div class="overflow-hidden shadow-lg rounded-lg m-8 border border-neutral-800/20" id="imagesTable">
-        <table class="min-w-full divide-y divide-white/10">
-          <thead class="bg-white/5">
-            <tr>
-              <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Name</th>
-              <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Author</th>
-              <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Created At</th>
-              <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/5 bg-white/5">
-            <% images.forEach(function(image) { %>
-              <tr class="hover:bg-white/[0.05] transition-colors">
-                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-white"><%= image.name %></td>
-                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-neutral-400"><%= image.author %></td>
-                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-500"><%= new Date(image.createdAt).toLocaleDateString() %></td>
-                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-white">
-                  <div class="flex gap-3">
-                    <a href="/admin/images/edit/<%= image.id %>" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">
-                      Edit
-                    </a>
-                    <a href="/admin/images/export/<%= image.id %>" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">
-                      Export
-                    </a>
-                    <button
-                      onclick="deleteImage('<%= image.id %>')"
-                      type="button"
-                      class="rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <!-- Table of images -->
+<div class="m-4 sm:m-8" id="imagesTable">
+  <!-- Desktop Table View (hidden on mobile) -->
+  <div id="desktopTable" class="overflow-hidden shadow-lg rounded-lg border border-neutral-800/20">
+    <table class="min-w-full divide-y divide-white/10">
+      <thead class="bg-white/5">
+        <tr>
+          <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Name</th>
+          <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Author</th>
+          <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Created At</th>
+          <th class="py-3.5 pl-6 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5 bg-white/5">
+        <% images.forEach(function(image) { %>
+          <tr class="hover:bg-white/[0.05] transition-colors">
+            <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-white"><%= image.name %></td>
+            <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-neutral-400"><%= image.author %></td>
+            <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-500"><%= new Date(image.createdAt).toLocaleDateString() %></td>
+            <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-neutral-800 dark:text-white">
+              <div class="flex gap-3">
+                <a href="/admin/images/edit/<%= image.id %>" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">
+                  Edit
+                </a>
+                <a href="/admin/images/export/<%= image.id %>" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">
+                  Export
+                </a>
+                <button
+                  onclick="deleteImage('<%= image.id %>')"
+                  type="button"
+                  class="rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
   </div>
+
+  <!-- Mobile Card View (visible only on mobile) -->
+  <div id="mobileCards" class="space-y-4">
+    <% images.forEach(function(image) { %>
+      <div class="bg-white/5 border border-neutral-800/20 rounded-lg shadow-lg p-4 hover:bg-white/[0.05] transition-colors">
+        <!-- Image Info Header -->
+        <div class="mb-3">
+          <div class="font-medium text-neutral-800 dark:text-white text-base mb-1"><%= image.name %></div>
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-neutral-500 dark:text-neutral-400">By: <span class="text-neutral-800 dark:text-neutral-300"><%= image.author %></span></div>
+            <div class="text-xs text-neutral-500"><%= new Date(image.createdAt).toLocaleDateString() %></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col space-y-2">
+          <div class="flex space-x-2">
+            <a href="/admin/images/edit/<%= image.id %>" class="flex-1">
+              <button type="button" class="w-full rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Edit</button>
+            </a>
+            <a href="/admin/images/export/<%= image.id %>" class="flex-1">
+              <button type="button" class="w-full rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Export</button>
+            </a>
+          </div>
+          <button
+            onclick="deleteImage('<%= image.id %>')"
+            type="button"
+            class="w-full rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<script>
+function toggleImagesView() {
+  const mobileCards = document.getElementById('mobileCards');
+  const desktopTable = document.getElementById('desktopTable');
+  
+  if (window.innerWidth >= 640) { // sm breakpoint
+    mobileCards.style.display = 'none';
+    desktopTable.style.display = 'block';
+  } else {
+    mobileCards.style.display = 'block';
+    desktopTable.style.display = 'none';
+  }
+}
+
+// Run on load
+toggleImagesView();
+
+// Run on resize
+window.addEventListener('resize', toggleImagesView);
+</script>
 </main>
 
       <div class="flex justify-end gap-2">
