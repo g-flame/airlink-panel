@@ -18,94 +18,169 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update Node.js versions
-  # You may pin to the exact commit or the version.
-  # uses: hongaar/update-node-versions@9fe180c8bcd7b577f5e625d82d361f8ee8bcc4e2
-  uses: hongaar/update-node-versions@v2.2.0
-  with:
-    # Node versions to select
-    versions: # default is latest
-lts
-lts/-1
-lts/-2
-
-    # Filter out Node versions which are end-of-life
-    versions.filter-eol: # optional, default is true
-    # Update GitHub workflows
-    updaters.workflows: # optional, default is true
-    # Update GitHub workflows
-    updaters.workflows.variable: # optional, default is node-version
-    # Update package.json `engines`
-    updaters.engines: # optional, default is true
-    # Update arbitrary files
-    updaters.files: # optional
-    # Glob pattern for files to update
-    updaters.files.glob: # optional
-    # Matches will be replaced with the template
-    updaters.files.regex: # optional
-    # Replace matches with this template
-    updaters.files.template: # optional
-          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build TypeScript
         run: npm run build-ts
 
       - name: Build Tailwind CSS
-        run: |
-          # Build CSS from the tailwind config
-          npx tailwindcss -i ./public/tw.conf -o ./public/styles.css --minify
+        run: npx tailwindcss -i ./public/tw.conf -o ./public/styles.css --minify
 
-      - name: Create static frontend build
+      - name: Create static site structure
         run: |
-          # Create frontend distribution directory
-          mkdir -p frontend-dist
+          mkdir -p static-site
           
-          # Copy all public assets (CSS, JS, images, etc.)
-          if [ -d "public" ]; then
-            cp -r public/* frontend-dist/
-          fi
+          # Copy all public assets
+          cp -r public/* static-site/
           
-          # Copy any client-side compiled JavaScript
-          if [ -d "dist" ]; then
-            # Find and copy client-side JS files (avoid server files)
-            find dist -name "*.js" | while read file; do
-              # Skip server-related files
-              if [[ $file != *"app.js"* && $file != *"server"* && $file != *"handlers"* && $file != *"middleware"* ]]; then
-                cp "$file" frontend-dist/
-              fi
-            done
-          fi
+          # Ensure CSS is in the right place
+          cp public/styles.css static-site/styles.css
 
-      - name: Convert EJS templates to static HTML
+      - name: Generate static HTML from EJS templates
         run: |
-          # Install EJS CLI for template conversion
-          npm install -g ejs-cli
-          
-          # Create a simple Node.js script to render EJS templates to HTML
-          cat > convert-templates.js << 'EOF'
-          const ejs = require('ejs');
+          # Create build script for EJS conversion
+          cat > build-static.js << 'EOF'
           const fs = require('fs');
           const path = require('path');
+          const ejs = require('ejs');
           
-          // Mock data for template rendering
+          // Mock data for rendering templates
           const mockData = {
             title: 'Airlink Panel - Game Server Management',
             user: null,
-            page: 'demo',
+            page: 'home',
             version: '1.0.0',
             isDev: false,
-            csrfToken: 'demo-token'
+            csrfToken: 'static-build-token',
+            // Add any other variables your templates might need
+            servers: [],
+            nodes: [],
+            stats: {},
+            settings: {}
           };
           
-          // Find and convert EJS files
-          function convertEjsFiles(dir) {
+          // Template mappings (EJS file -> output HTML file)
+          const templateMappings = [
+            // Main pages
+            { input: 'views/index.ejs', output: 'static-site/index.html' },
+            { input: 'views/auth/login.ejs', output: 'static-site/login.html' },
+            { input: 'views/auth/register.ejs', output: 'static-site/register.html' },
+            { input: 'views/user/dashboard.ejs', output: 'static-site/dashboard.html' },
+            { input: 'views/user/account.ejs', output: 'static-site/account.html' },
+            { input: 'views/api/documentation.ejs', output: 'static-site/api-docs.html' },
+            
+            // Admin pages
+            { input: 'views/admin/overview/overview.ejs', output: 'static-site/admin/index.html' },
+            { input: 'views/admin/servers/servers.ejs', output: 'static-site/admin/servers.html' },
+            { input: 'views/admin/nodes/nodes.ejs', output: 'static-site/admin/nodes.html' },
+            { input: 'views/admin/users/users.ejs', output: 'static-site/admin/users.html' },
+            { input: 'views/admin/settings/settings.ejs', output: 'static-site/admin/settings.html' },
+            { input: 'views/admin/analytics/analytics.ejs', output: 'static-site/admin/analytics.html' },
+            { input: 'views/admin/apikeys/apikeys.ejs', output: 'static-site/admin/apikeys.html' },
+            { input: 'views/admin/addons/addons.ejs', output: 'static-site/admin/addons.html' },
+          ];
+          
+          // Ensure directories exist
+          const ensureDir = (filePath) => {
+            const dir = path.dirname(filePath);
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir, { recursive: true });
+            }
+          };
+          
+          // Process each template
+          templateMappings.forEach(({ input, output }) => {
+            try {
+              if (fs.existsSync(input)) {
+                console.log(`Processing ${input} -> ${output}`);
+                
+                ensureDir(output);
+                
+                // Read and render template
+                const template = fs.readFileSync(input, 'utf8');
+                const html = ejs.render(template, mockData, {
+                  filename: input,
+                  views: ['views', 'views/components'],
+                  root: process.cwd()
+                });
+                
+                fs.writeFileSync(output, html);
+                console.log(`✓ Generated ${output}`);
+              } else {
+                console.log(`⚠ Template not found: ${input}`);
+              }
+            } catch (error) {
+              console.error(`✗ Error processing ${input}:`, error.message);
+            }
+          });
+          
+          // Create a simple index page if main index fails
+          if (!fs.existsSync('static-site/index.html')) {
+            const fallbackHTML = `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Airlink Panel</title>
+              <link rel="stylesheet" href="styles.css">
+              <link rel="icon" type="image/x-icon" href="favicon.ico">
+          </head>
+          <body class="bg-gray-900 text-white">
+              <div class="min-h-screen flex items-center justify-center">
+                  <div class="text-center">
+                      <h1 class="text-4xl font-bold mb-4">Airlink Panel</h1>
+                      <p class="text-gray-300 mb-8">Game Server Management Platform</p>
+                      <div class="space-x-4">
+                          <a href="login.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded">Login</a>
+                          <a href="register.html" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded">Register</a>
+                          <a href="api-docs.html" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded">API Docs</a>
+                      </div>
+                  </div>
+              </div>
+          </body>
+          </html>`;
+            fs.writeFileSync('static-site/index.html', fallbackHTML);
+            console.log('✓ Created fallback index.html');
+          }
+          
+          console.log('\n📁 Generated static site structure:');
+          const listFiles = (dir, indent = '') => {
+            if (!fs.existsSync(dir)) return;
+            const files = fs.readdirSync(dir, { withFileTypes: true });
+            files.forEach(file => {
+              console.log(`${indent}${file.isDirectory() ? '📁' : '📄'} ${file.name}`);
+              if (file.isDirectory()) {
+                listFiles(path.join(dir, file.name), indent + '  ');
+              }
+            });
+          };
+          listFiles('static-site');
+          EOF
+          
+          # Run the build script
+          node build-static.js
+
+      - name: Fix relative paths for static hosting
+        run: |
+          # Create script to fix asset paths
+          cat > fix-paths.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          
+          const fixPaths = (dir) => {
             if (!fs.existsSync(dir)) return;
             
             const files = fs.readdirSync(dir, { withFileTypes: true });
@@ -114,234 +189,61 @@ lts/-2
               const fullPath = path.join(dir, file.name);
               
               if (file.isDirectory()) {
-                convertEjsFiles(fullPath);
-              } else if (file.name.endsWith('.ejs')) {
-                try {
-                  const template = fs.readFileSync(fullPath, 'utf8');
-                  const html = ejs.render(template, mockData, {
-                    filename: fullPath,
-                    views: [dir, 'views', 'src/views']
-                  });
-                  
-                  const outputPath = path.join('frontend-dist', 
-                    file.name === 'index.ejs' ? 'index.html' : file.name.replace('.ejs', '.html')
-                  );
-                  
-                  fs.writeFileSync(outputPath, html);
-                  console.log(`Converted ${file.name} -> ${path.basename(outputPath)}`);
-                } catch (error) {
-                  console.log(`Could not convert ${file.name}:`, error.message);
-                }
+                fixPaths(fullPath);
+              } else if (file.name.endsWith('.html')) {
+                let content = fs.readFileSync(fullPath, 'utf8');
+                
+                // Fix common asset paths
+                content = content.replace(/src="\/javascript\//g, 'src="./javascript/');
+                content = content.replace(/src="\/js\//g, 'src="./js/');
+                content = content.replace(/href="\/styles\.css"/g, 'href="./styles.css"');
+                content = content.replace(/src="\/assets\//g, 'src="./assets/');
+                content = content.replace(/href="\/favicon\.ico"/g, 'href="./favicon.ico"');
+                
+                fs.writeFileSync(fullPath, content);
               }
             });
-          }
+          };
           
-          // Convert templates from common locations
-          ['views', 'src/views', 'templates'].forEach(dir => {
-            convertEjsFiles(dir);
-          });
+          fixPaths('static-site');
+          console.log('✓ Fixed asset paths for static hosting');
           EOF
           
-          # Run the conversion script
-          node convert-templates.js
+          node fix-paths.js
 
-      - name: Create demo landing page
+      - name: Validate build output
         run: |
-          # Create a comprehensive demo page
-          cat > frontend-dist/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Airlink Panel - Game Server Management</title>
-              <link href="styles.css" rel="stylesheet" type="text/css">
-              <style>
-                  /* Fallback styles if Tailwind doesn't load */
-                  * { margin: 0; padding: 0; box-sizing: border-box; }
-                  body { 
-                      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                      line-height: 1.6;
-                  }
-                  .gradient-bg {
-                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                      min-height: 100vh;
-                  }
-                  .glass-card {
-                      background: rgba(255, 255, 255, 0.95);
-                      backdrop-filter: blur(10px);
-                      border-radius: 20px;
-                      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-                  }
-              </style>
-          </head>
-          <body class="gradient-bg">
-              <!-- Header -->
-              <nav class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50">
-                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <div class="flex justify-between h-16 items-center">
-                          <div class="flex items-center space-x-3">
-                              <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                  <span class="text-white font-bold">A</span>
-                              </div>
-                              <h1 class="text-xl font-bold text-gray-900">Airlink Panel</h1>
-                          </div>
-                          <div class="flex items-center space-x-4">
-                              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  🚀 Demo Build
-                              </span>
-                              <a href="https://github.com/g-flame/airlink-panel" 
-                                 class="text-gray-700 hover:text-gray-900 transition-colors">
-                                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                      <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"></path>
-                                  </svg>
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-              </nav>
+          echo "📊 Build Summary:"
+          echo "=================="
+          echo "HTML files: $(find static-site -name '*.html' | wc -l)"
+          echo "CSS files: $(find static-site -name '*.css' | wc -l)"
+          echo "JS files: $(find static-site -name '*.js' | wc -l)"
+          echo "Image files: $(find static-site -name '*.png' -o -name '*.jpg' -o -name '*.ico' | wc -l)"
+          echo "Total files: $(find static-site -type f | wc -l)"
+          echo ""
+          echo "📁 Directory structure:"
+          ls -la static-site/
           
-              <!-- Hero Section -->
-              <div class="py-20">
-                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                      <div class="glass-card p-8 mx-auto max-w-4xl">
-                          <h2 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                              Streamlined Game Server
-                              <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                  Management
-                              </span>
-                          </h2>
-                          <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                              Airlink Panel is an advanced, open-source game server management platform 
-                              designed to simplify server deployment, monitoring, and administration.
-                          </p>
-                          
-                          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                              <a href="#features" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all">
-                                  Explore Features
-                              </a>
-                              <a href="https://github.com/g-flame/airlink-panel" class="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold border-2 border-gray-300 hover:border-gray-400 transition-colors">
-                                  View Source
-                              </a>
-                          </div>
-                          
-                          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
-                              <strong>⚠️ Development Notice:</strong> 
-                              AirLink is currently in active development. This is a frontend demo deployment.
-                          </div>
-                      </div>
-                  </div>
-              </div>
+          # Check if main files exist
+          if [ ! -f "static-site/index.html" ]; then
+            echo "❌ Missing index.html"
+            exit 1
+          fi
           
-              <!-- Features Section -->
-              <div id="features" class="py-20 bg-white/50">
-                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <div class="text-center mb-16">
-                          <h3 class="text-3xl font-bold text-gray-900 mb-4">Powerful Features</h3>
-                          <p class="text-lg text-gray-600">Everything you need to manage your game servers effectively</p>
-                      </div>
-                      
-                      <div class="grid md:grid-cols-3 gap-8">
-                          <div class="glass-card p-6 text-center hover:shadow-xl transition-shadow">
-                              <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <span class="text-2xl">🎮</span>
-                              </div>
-                              <h4 class="text-xl font-semibold text-gray-900 mb-3">Server Management</h4>
-                              <p class="text-gray-600">Deploy, monitor, and manage your game servers with ease. Real-time status updates and performance metrics.</p>
-                          </div>
-                          
-                          <div class="glass-card p-6 text-center hover:shadow-xl transition-shadow">
-                              <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <span class="text-2xl">🔧</span>
-                              </div>
-                              <h4 class="text-xl font-semibold text-gray-900 mb-3">Addon System</h4>
-                              <p class="text-gray-600">Extend functionality with powerful addons. Customize your panel to fit your specific needs.</p>
-                          </div>
-                          
-                          <div class="glass-card p-6 text-center hover:shadow-xl transition-shadow">
-                              <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <span class="text-2xl">📊</span>
-                              </div>
-                              <h4 class="text-xl font-semibold text-gray-900 mb-3">Advanced Monitoring</h4>
-                              <p class="text-gray-600">Comprehensive monitoring with real-time statistics, alerts, and detailed analytics.</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
+          if [ ! -f "static-site/styles.css" ]; then
+            echo "❌ Missing styles.css"
+            exit 1
+          fi
           
-              <!-- Tech Stack Section -->
-              <div class="py-20">
-                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <div class="glass-card p-8 text-center">
-                          <h3 class="text-3xl font-bold text-gray-900 mb-8">Built with Modern Technology</h3>
-                          
-                          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                              <div class="flex flex-col items-center">
-                                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2">
-                                      <span class="text-blue-600 font-bold">TS</span>
-                                  </div>
-                                  <span class="text-sm font-medium text-gray-700">TypeScript</span>
-                              </div>
-                              <div class="flex flex-col items-center">
-                                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-2">
-                                      <span class="text-green-600 font-bold">N</span>
-                                  </div>
-                                  <span class="text-sm font-medium text-gray-700">Node.js 20</span>
-                              </div>
-                              <div class="flex flex-col items-center">
-                                  <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-2">
-                                      <span class="text-purple-600 font-bold">E</span>
-                                  </div>
-                                  <span class="text-sm font-medium text-gray-700">Express.js</span>
-                              </div>
-                              <div class="flex flex-col items-center">
-                                  <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-2">
-                                      <span class="text-cyan-600 font-bold">T</span>
-                                  </div>
-                                  <span class="text-sm font-medium text-gray-700">Tailwind CSS</span>
-                              </div>
-                          </div>
-                          
-                          <div class="text-sm text-gray-500">
-                              Deployed with GitHub Actions • Built: <span id="build-time"></span>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          
-              <script>
-                  // Set build timestamp
-                  document.getElementById('build-time').textContent = new Date().toLocaleString();
-                  
-                  // Smooth scrolling for anchor links
-                  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                      anchor.addEventListener('click', function (e) {
-                          e.preventDefault();
-                          const target = document.querySelector(this.getAttribute('href'));
-                          if (target) {
-                              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          }
-                      });
-                  });
-              </script>
-          </body>
-          </html>
-          EOF
+          echo "✅ Build validation passed"
 
-      - name: List build contents
-        run: |
-          echo "Contents of frontend-dist:"
-          ls -la frontend-dist/
-          echo "File count:"
-          find frontend-dist -type f | wc -l
-
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./frontend-dist
+          path: ./static-site
 
       - name: Deploy to GitHub Pages
         id: deployment
