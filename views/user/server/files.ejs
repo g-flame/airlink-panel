@@ -46,40 +46,45 @@ function isImageFile(filename) {
 <main class="h-screen m-auto">
   <div class="flex h-screen">
     <!-- Sidebar -->
-    <div class="w-60 h-full">
+    <div class="hidden sm:block w-60 h-full">
       <%- include('../../components/template') %>
+    </div>
+
+    <!-- Mobile button -->
+    <div class="block lg:hidden">
+      <%- include('../../components/mobile') %>
     </div>
 
     <!-- Content -->
     <div class="flex-1 p-6 overflow-y-auto pt-16">
+      <div class="sm:hidden">
+        <%- include('../../components/serverMobile') %>
+      </div>
+
       <!-- Page Header -->
       <div class="sm:flex sm:items-center px-8 pt-4">
         <%- include('../../components/serverHeader') %>
         <% if (!(typeof serverStatus !== 'undefined' && serverStatus.daemonOffline && errorMessage && errorMessage.message)) { %>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex gap-2.5">
-          <button id="createFile" onclick="openCreateFileModal()" type="button"
-              class="border border-neutral-800/20 block rounded-xl bg-white hover:bg-neutral-200 dark:hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition duration-300 focus:outline focus:outline-2 focus:outline-offset-2 mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline-flex mr-1 text-neutral-800 mb-0.5">
-                <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z" clip-rule="evenodd" />
-                <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
-              </svg>
-              Create File
+          <button id="createFile" onclick="openCreateFileModal()" type="button" class="border border-neutral-800/20 block rounded-xl bg-white hover:bg-neutral-200 dark:hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition duration-300 focus:outline focus:outline-2 focus:outline-offset-2 mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline-flex mr-1 text-neutral-800 mb-0.5">
+              <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z" clip-rule="evenodd" />
+              <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+            </svg>
+            Create File
           </button>
 
-          <button id="uploadFile" onclick="openUploadFileModal()" type="button"
-              class="border border-neutral-800/20 block rounded-xl bg-white hover:bg-neutral-200 dark:hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition duration-300 focus:outline focus:outline-2 focus:outline-offset-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline-flex mr-1 text-neutral-800 mb-0.5">
-                <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V16.5a.75.75 0 0 1-1.5 0V4.81L8.03 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-              Upload File
+          <button id="uploadFile" onclick="openUploadFileModal()" type="button" class="border border-neutral-800/20 block rounded-xl bg-white hover:bg-neutral-200 dark:hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition duration-300 focus:outline focus:outline-2 focus:outline-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline-flex mr-1 text-neutral-800 mb-0.5">
+              <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V16.5a.75.75 0 0 1-1.5 0V4.81L8.03 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+            Upload File
           </button>
-      </div>
+        </div>
         <% } %>
       </div>
 
       <%- include('../../components/installHeader') %>
-
-      <!-- Daemon down message removed as requested -->
 
       <!-- Server Template -->
       <%- include('../../components/serverTemplate') %>
@@ -115,48 +120,49 @@ function isImageFile(filename) {
 
                       if (index < parts.length - 1) {
                           %>
-                          <a href="./files?path=<%= currentPath %>" class="text-neutral-300 hover:text-neutral-200 transition"><%= part %></a>/
-                          <%
+          <a href="./files?path=<%= currentPath %>" class="text-neutral-300 hover:text-neutral-200 transition"><%= part %></a>/
+          <%
                           currentPath += '/';
                       } else {
                           %>
-                          <span class="text-neutral-100"><%= part %></span>
-                          <%
+          <span class="text-neutral-100"><%= part %></span>
+          <%
                       }
                   });
               }
           %>
         </h1>
-       </div>
+      </div>
 
       <!-- File Table or Daemon Offline Message -->
       <% if (typeof serverStatus !== 'undefined' && serverStatus.daemonOffline && errorMessage && errorMessage.message) { %>
-        <!-- Daemon Offline Message -->
-        <div class="px-8 mt-8">
-          <div class="bg-neutral-800/30 rounded-xl p-8 text-center">
-            <div class="flex justify-center mb-6">
-              <div class="w-16 h-16 rounded-full bg-neutral-700/50 flex items-center justify-center">
+      <!-- Daemon Offline Message -->
+      <div class="px-8 mt-8">
+        <div class="bg-neutral-800/30 rounded-xl p-8 text-center">
+          <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 rounded-full bg-neutral-700/50 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m3 3 8.735 8.735m0 0a.374.374 0 1 1 .53.53m-.53-.53.53.53m0 0L21 21M14.652 9.348a3.75 3.75 0 0 1 0 5.304m2.121-7.425a6.75 6.75 0 0 1 0 9.546m2.121-11.667c3.808 3.807 3.808 9.98 0 13.788m-9.546-4.242a3.733 3.733 0 0 1-1.06-2.122m-1.061 4.243a6.75 6.75 0 0 1-1.625-6.929m-.496 9.05c-3.068-3.067-3.664-7.67-1.79-11.334M12 12h.008v.008H12V12Z" />
               </svg>
-              </div>
-            </div>
-            <h2 class="text-xl font-semibold text-neutral-300">Daemon Offline</h2>
-            <p class="mt-2 text-sm text-neutral-500 max-w-md mx-auto">
-              The daemon appears to be offline. File management is unavailable until the connection is restored.
-            </p>
-            <div class="mt-6">
-              <button onclick="window.location.reload()" class="px-4 py-2 bg-neutral-600 hover:bg-neutral-700 text-white text-sm rounded-lg transition-colors">
-                Retry Connection
-              </button>
             </div>
           </div>
+          <h2 class="text-xl font-semibold text-neutral-300">Daemon Offline</h2>
+          <p class="mt-2 text-sm text-neutral-500 max-w-md mx-auto">
+            The daemon appears to be offline. File management is unavailable until the connection is restored.
+          </p>
+          <div class="mt-6">
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-neutral-600 hover:bg-neutral-700 text-white text-sm rounded-lg transition-colors">
+              Retry Connection
+            </button>
+          </div>
         </div>
+      </div>
       <% } else { %>
-        <!-- File Table -->
-        <div class="px-8 mt-8">
-          <div class="overflow-hidden rounded-lg shadow-md border border-neutral-700/10 dark:bg-neutral-400/20">
-            <table class="min-w-full bg-white dark:bg-neutral-800">
+      
+      <!-- Desktop File Table (hidden on mobile) -->
+      <div id="desktopTable" class="px-8 mt-8">
+        <div class="overflow-hidden rounded-lg shadow-md border border-neutral-700/10 dark:bg-neutral-400/20">
+          <table class="min-w-full bg-white dark:bg-neutral-800">
             <thead class="text-neutral-800 dark:text-neutral-100">
               <tr>
                 <th class="px-6 py-3 text-left">
@@ -169,12 +175,12 @@ function isImageFile(filename) {
             </thead>
             <tbody>
               <% files.forEach(file => { %>
-                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/30 cursor-pointer">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white border-none">
-                    <input type="checkbox" class="form-checkbox h-5 w-5 text-neutral-500 bg-white/5 border border-white/10 rounded focus:ring-offset-neutral-800 focus:ring-neutral-700 transition focus:border-none file-checkbox" data-filename="<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>">
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white border-none">
-                    <%
+              <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/30 cursor-pointer">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white border-none">
+                  <input type="checkbox" class="form-checkbox h-5 w-5 text-neutral-500 bg-white/5 border border-white/10 rounded focus:ring-offset-neutral-800 focus:ring-neutral-700 transition focus:border-none file-checkbox" data-filename="<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>">
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white border-none">
+                  <%
                       const isImage = file.type !== 'directory' && isImageFile(file.name);
                       const filePath = currentPath && currentPath !== '/'
                         ? currentPath.replace(/^\/+/, '') + '/' + file.name
@@ -195,165 +201,476 @@ function isImageFile(filename) {
                         return `${size.toFixed(2)} ${sizes[unitIndex]}`;
                       })();
                     %>
-                    <a href="<%= fileHref %>" class="flex items-center" <% if (isImage) { %>onclick="event.preventDefault(); showImageViewer('<%= file.name %>', '<%= filePath %>', '<%= fileSize %>', '<%= server.UUID %>');"<% } %>>
+                  <a href="<%= fileHref %>" class="flex items-center" <% if (isImage) { %>onclick="event.preventDefault(); showImageViewer('<%= file.name %>', '<%= filePath %>', '<%= fileSize %>', '<%= server.UUID %>');" <% } %>>
                     <span class="mr-4">
                       <%- getFileIcon(
                           file.type === 'directory' ? 'Folder' : file.category || 'No Category'
                         ) %>
                     </span>
                     <%= file.name %>
-                    </a>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-neutral-700 dark:text-neutral-300">
-                    <%= fileSize %>
-                  </td>
-                  <td class="px-6 py-4 text-sm">
-                    <button onclick="toggleDropdown(event, '<%= file.name %>')" class="text-neutral-400 hover:text-white transition">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                      </svg>
-                    </button>
+                  </a>
+                </td>
+                <td class="px-6 py-4 text-sm text-neutral-700 dark:text-neutral-300">
+                  <%= fileSize %>
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  <button onclick="toggleDropdown(event, '<%= file.name %>')" class="text-neutral-400 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                    </svg>
+                  </button>
 
-                    <div id="dropdown-<%= file.name %>" class="absolute right-0 mt-2 w-fit mr-20 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 transform opacity-0 scale-95 transition-all duration-200 ease-out pointer-events-none">
-                      <div
-                        class="p-2 bg-gray-900 dark:bg-white rounded-lg shadow-md"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="options-menu"
-                      >
-                        <button
-                          class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-200 text-left"
-                          role="menuitem"
-                          onclick="rename('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')"
-                        >
-                          Rename
-                        </button>
+                  <div id="dropdown-<%= file.name %>" class="absolute right-0 mt-2 w-fit mr-20 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 transform opacity-0 scale-95 transition-all duration-200 ease-out pointer-events-none">
+                    <div class="p-2 bg-gray-900 dark:bg-white rounded-lg shadow-md" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                      <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-200 text-left" role="menuitem" onclick="rename('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                        Rename
+                      </button>
 
-                        <% if (file.type !== 'directory') { %>
-                          <button
-                            class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-red-50 dark:hover:bg-neutral-200 text-left"
-                            role="menuitem"
-                            onclick="downloadfile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')"
-                          >
-                            Download
-                          </button>
-                        <% } %>
+                      <% if (file.type !== 'directory') { %>
+                      <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-red-50 dark:hover:bg-neutral-200 text-left" role="menuitem" onclick="downloadfile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                        Download
+                      </button>
+                      <% } %>
 
-                        <% if (file.name.toLowerCase().endsWith('.zip')) { %>
-                        <button
-                            class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-green-50 dark:hover:bg-neutral-200 text-left"
-                            role="menuitem"
-                            onclick="extractZip('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')"
-                        >
-                            Extract Here
-                        </button>
-                        <% } %>
+                      <% if (file.name.toLowerCase().endsWith('.zip')) { %>
+                      <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-900 hover:bg-green-50 dark:hover:bg-neutral-200 text-left" role="menuitem" onclick="extractZip('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                        Extract Here
+                      </button>
+                      <% } %>
 
-                        <button
-                          class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-red-500 dark:text-red-600 hover:bg-red-50 dark:hover:bg-red-50 text-left"
-                          role="menuitem"
-                          onclick="deletefile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')"
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-1 text-sm font-medium text-red-500 dark:text-red-600 hover:bg-red-50 dark:hover:bg-red-50 text-left" role="menuitem" onclick="deletefile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                        Delete
+                      </button>
                     </div>
+                  </div>
 
-                  </td>
-                </tr>
+                </td>
+              </tr>
               <% }) %>
             </tbody>
           </table>
         </div>
       </div>
-      <% } %>
-    </div>
 
-    <!-- Modals and stuff -->
-
-   <!-- Floating Action Bar (only show when daemon is online) -->
-   <% if (!(typeof serverStatus !== 'undefined' && serverStatus.daemonOffline && errorMessage && errorMessage.message)) { %>
-   <div id="floatingActionBar" class="fixed bottom-0 w-full bg-neutral-800 z-50 backdrop-blur text-white py-4 px-6 transform transition-transform duration-300 ease-in-out flex justify-between items-center">
-    <span id="selectedFilesCount">0 files selected</span>
-    <div class="flex gap-4">
-        <button id="massDeleteBtn" class="w-full md:w-auto rounded-xl bg-red-600 hover:bg-red-500 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
-            Delete Selected
-        </button>
-        <button id="massArchiveBtn" class="w-full md:w-auto rounded-xl bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
-            Archive Selected
-        </button>
-    </div>
-</div>
-   <% } %>
- <!-- Mass Delete Confirmation Modal -->
- <div id="massDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white rounded-xl p-8 max-w-md w-full transform scale-95 transition-transform duration-300">
-       <h2 class="text-2xl font-medium mb-1 text-neutral-800">Confirm Mass Deletion</h2>
-       <p id="massDeleteMessage" class="mb-6 text-neutral-600"></p>
-       <div class="flex justify-end space-x-4">
-          <button onclick="closeMassDeleteModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">Cancel</button>
-          <button id="confirmMassDelete" class="w-full md:w-auto rounded-xl bg-red-600 hover:bg-red-500 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">Delete</button>
-       </div>
-    </div>
- </div>
-  <!-- Create file -->
-  <div id="createFileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white rounded-xl p-8 max-w-md w-full transform scale-95 transition-transform duration-300">
-        <h2 class="text-2xl font-medium mb-1 text-neutral-800">Create File</h2>
-        <p class="mb-6 text-neutral-600">Please choose a name for this file.</p>
-        <input type="text"
-        id="FileName"
-        class="w-full px-3 py-2 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-neutral-500 transition mb-4 text-neutral-800"
-        placeholder="Enter file name"
-        onkeydown="handleFileNameKeyPress(event)">
-        <div class="flex justify-end space-x-4">
-          <button onclick="closeCreateFileModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">Cancel</button>
-          <button onclick="confirmCreateFile()" class="w-full md:w-auto rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">Create</button>
+      <!-- Mobile File Cards (hidden on desktop) -->
+      <div id="mobileCards" class="px-8 mt-8">
+        <!-- Mobile Select All -->
+        <div class="mb-4 p-3 bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700">
+          <label class="flex items-center">
+            <input type="checkbox" id="selectAllMobile" class="form-checkbox h-5 w-5 text-neutral-500 bg-white/10 border border-white/15 rounded focus:ring-offset-neutral-800 focus:ring-neutral-700 transition focus:border-none file-checkbox mr-3">
+            <span class="text-sm font-medium text-neutral-800 dark:text-white">Select All Files</span>
+          </label>
         </div>
-    </div>
-  </div>
 
-  <!-- Upload file -->
-  <div id="uploadFileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white rounded-xl p-8 max-w-md w-full transform scale-95 transition-transform duration-300">
-        <h2 class="text-2xl font-medium mb-1 text-neutral-800">Upload File</h2>
-        <p class="mb-6 text-neutral-600">Select a file to upload to the current directory.</p>
-        <div class="mb-4">
-          <div class="mb-4">
-            <label for="fileInput" class="w-full px-3 py-6 border-2 border-dashed border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-neutral-500 transition text-neutral-800 text-center cursor-pointer hover:bg-neutral-50 block" id="dropZone">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 mx-auto mb-2 text-neutral-400">
-                <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V16.5a.75.75 0 0 1-1.5 0V4.81L8.03 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-              <p class="text-neutral-500">Drag & drop a file here or click to browse</p>
-            </label>
-            <input type="file" id="fileInput" class="hidden" onchange="handleFileInputChange(event)">
-          </div>
-          <div id="filePreview" class="hidden">
-            <div class="flex items-center p-3 bg-neutral-100 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-3 text-neutral-600">
-                <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
-                <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
-              </svg>
-              <div class="flex-1 truncate">
-                <p id="selectedFileName" class="font-medium text-neutral-800 truncate"></p>
-                <p id="selectedFileSize" class="text-sm text-neutral-500"></p>
+        <!-- Mobile File Cards -->
+        <div class="space-y-3">
+          <% files.forEach(file => { %>
+          <%
+              const isImage = file.type !== 'directory' && isImageFile(file.name);
+              const filePath = currentPath && currentPath !== '/'
+                ? currentPath.replace(/^\/+/, '') + '/' + file.name
+                : file.name;
+              const fileHref = file.type === 'directory'
+                ? `/server/${server.UUID}/files?path=${encodeURIComponent(filePath)}`
+                : isImage
+                  ? '#'
+                  : `/server/${server.UUID}/files/edit/${encodeURIComponent(filePath)}`;
+              const fileSize = (() => {
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                let size = file.size;
+                let unitIndex = 0;
+                while (size >= 1024 && unitIndex < sizes.length - 1) {
+                  size /= 1024;
+                  unitIndex++;
+                }
+                return `${size.toFixed(2)} ${sizes[unitIndex]}`;
+              })();
+            %>
+          
+          <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 p-4">
+            <!-- File Header -->
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center flex-1 min-w-0">
+                <input type="checkbox" class="form-checkbox h-5 w-5 text-neutral-500 bg-white/5 border border-white/10 rounded focus:ring-offset-neutral-800 focus:ring-neutral-700 transition focus:border-none file-checkbox mr-3 mt-0.5" data-filename="<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>">
+                <a href="<%= fileHref %>" class="flex items-center flex-1 min-w-0" <% if (isImage) { %>onclick="event.preventDefault(); showImageViewer('<%= file.name %>', '<%= filePath %>', '<%= fileSize %>', '<%= server.UUID %>');" <% } %>>
+                  <span class="mr-3 flex-shrink-0">
+                    <%- getFileIcon(
+                        file.type === 'directory' ? 'Folder' : file.category || 'No Category'
+                      ) %>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white truncate"><%= file.name %></p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1"><%= fileSize %></p>
+                  </div>
+                </a>
               </div>
-              <button onclick="removeSelectedFile()" class="ml-2 text-neutral-400 hover:text-neutral-600">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+              
+              <!-- Mobile Actions Button -->
+              <button onclick="toggleDropdown(event, '<%= file.name %>')" class="ml-2 p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                 </svg>
               </button>
             </div>
+
+            <!-- Mobile Dropdown Menu -->
+            <div id="dropdown-<%= file.name %>" class="absolute right-4 mt-2 w-48 rounded-lg shadow-lg bg-white dark:bg-neutral-700 ring-1 ring-black ring-opacity-5 z-10 transform opacity-0 scale-95 transition-all duration-200 ease-out pointer-events-none">
+              <div class="p-2 rounded-lg shadow-md" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-2 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-600 text-left" role="menuitem" onclick="rename('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                  Rename
+                </button>
+
+                <% if (file.type !== 'directory') { %>
+                <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-2 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-600 text-left" role="menuitem" onclick="downloadfile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                  Download
+                </button>
+                <% } %>
+
+                <% if (file.name.toLowerCase().endsWith('.zip')) { %>
+                <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-2 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-green-100 dark:hover:bg-neutral-600 text-left" role="menuitem" onclick="extractZip('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                  Extract Here
+                </button>
+                <% } %>
+
+                <button class="w-full transition-colors duration-200 rounded-lg block px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-left" role="menuitem" onclick="deletefile('<%= file.name %>', '<%= currentPath && currentPath !== '/' ? currentPath.replace(/^\/+/, '') + '/' + file.name : file.name %>')">
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
+          <% }) %>
         </div>
-        <div class="flex justify-end space-x-4">
-          <button onclick="closeUploadFileModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">Cancel</button>
-          <button id="uploadButton" class="w-full md:w-auto rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2" disabled>Upload</button>
-        </div>
+      </div>
+      
+      <% } %>
     </div>
-  </div>
+
+    <!-- JavaScript for responsive layout control -->
+    <script>
+      function toggleFilesView() {
+        const mobileCards = document.getElementById('mobileCards');
+        const desktopTable = document.getElementById('desktopTable');
+        
+        if (window.innerWidth >= 640) {
+          if (mobileCards) mobileCards.style.display = 'none';
+          if (desktopTable) desktopTable.style.display = 'block';
+        } else {
+          if (mobileCards) mobileCards.style.display = 'block';
+          if (desktopTable) desktopTable.style.display = 'none';
+        }
+      }
+
+      // Sync select all checkboxes between desktop and mobile
+      function syncSelectAll() {
+        const desktopSelectAll = document.getElementById('selectAll');
+        const mobileSelectAll = document.getElementById('selectAllMobile');
+        
+        if (desktopSelectAll && mobileSelectAll) {
+          desktopSelectAll.addEventListener('change', function() {
+            mobileSelectAll.checked = this.checked;
+          });
+          
+          mobileSelectAll.addEventListener('change', function() {
+            desktopSelectAll.checked = this.checked;
+          });
+        }
+      }
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        toggleFilesView();
+        syncSelectAll();
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', toggleFilesView);
+    </script>
 
   </div>
+</main>
+
+    <!-- Modals and stuff -->
+
+<!-- Floating Action Bar (only show when daemon is online) -->
+<% if (!(typeof serverStatus !== 'undefined' && serverStatus.daemonOffline && errorMessage && errorMessage.message)) { %>
+<div id="floatingActionBar" class="fixed bottom-0 w-full bg-neutral-800 z-50 backdrop-blur text-white py-3 sm:py-4 px-4 sm:px-6 transform transition-transform duration-300 ease-in-out">
+  <!-- Mobile Layout: Stacked -->
+  <div class="sm:hidden">
+    <div class="text-center mb-3">
+      <span id="selectedFilesCountMobile" class="text-sm font-medium">0 files selected</span>
+    </div>
+    <div class="space-y-2">
+      <button id="massDeleteBtnMobile" class="w-full rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-red-500">
+        Delete Selected
+      </button>
+      <button id="massArchiveBtnMobile" class="w-full rounded-xl bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
+        Archive Selected
+      </button>
+    </div>
+  </div>
+  
+  <!-- Desktop Layout: Side by Side -->
+  <div class="hidden sm:flex justify-between items-center">
+    <span id="selectedFilesCount" class="text-sm font-medium">0 files selected</span>
+    <div class="flex gap-4">
+      <button id="massDeleteBtn" class="rounded-xl bg-red-600 hover:bg-red-500 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Delete Selected
+      </button>
+      <button id="massArchiveBtn" class="rounded-xl bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Archive Selected
+      </button>
+    </div>
+  </div>
+</div>
+<% } %>
+
+<!-- Mass Delete Confirmation Modal -->
+<div id="massDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+  <div class="bg-white rounded-xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300">
+    <h2 class="text-xl sm:text-2xl font-medium mb-1 text-neutral-800">Confirm Mass Deletion</h2>
+    <p id="massDeleteMessage" class="mb-6 text-neutral-600 text-sm sm:text-base"></p>
+    
+    <!-- Mobile: Stacked buttons -->
+    <div class="sm:hidden space-y-3">
+      <button onclick="closeMassDeleteModal()" class="w-full py-3 px-4 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 active:bg-neutral-400 transition font-medium">
+        Cancel
+      </button>
+      <button id="confirmMassDeleteMobile" class="w-full rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Delete
+      </button>
+    </div>
+    
+    <!-- Desktop: Side by side buttons -->
+    <div class="hidden sm:flex justify-end space-x-4">
+      <button onclick="closeMassDeleteModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">
+        Cancel
+      </button>
+      <button id="confirmMassDelete" class="rounded-xl bg-red-600 hover:bg-red-500 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Create file -->
+<div id="createFileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+  <div class="bg-white rounded-xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300">
+    <h2 class="text-xl sm:text-2xl font-medium mb-1 text-neutral-800">Create File</h2>
+    <p class="mb-6 text-neutral-600 text-sm sm:text-base">Please choose a name for this file.</p>
+    
+    <input type="text" id="FileName" class="w-full px-3 py-3 sm:py-2 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-neutral-500 transition mb-4 text-neutral-800 text-base" placeholder="Enter file name" onkeydown="handleFileNameKeyPress(event)">
+    
+    <!-- Mobile: Stacked buttons -->
+    <div id="mobileButtons" class="sm:hidden space-y-3">
+  <button onclick="closeCreateFileModal()" class="w-full py-3 px-4 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 active:bg-neutral-400 transition font-medium">
+    Cancel
+  </button>
+  <button onclick="confirmCreateFile()" class="w-full rounded-xl bg-neutral-950 hover:bg-neutral-800 active:bg-neutral-900 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+    Create
+  </button>
+</div>
+<script>
+
+  function toggleDesktopHidden() {
+  const mobileButtons = document.getElementById('mobileButtons');
+
+  if (window.innerWidth >= 640) { // desktop
+    mobileButtons.classList.add('hidden'); // Tailwind class
+    mobileButtons.style.display = 'none';  // JS style
+  } else { // mobile
+    mobileButtons.classList.remove('hidden');
+    mobileButtons.style.display = 'block';
+  }
+}
+
+toggleDesktopHidden();
+window.addEventListener('resize', toggleDesktopHidden);
+
+</script>
+    
+    <!-- Desktop: Side by side buttons -->
+    <div class="hidden sm:flex justify-end space-x-4">
+      <button onclick="closeCreateFileModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">
+        Cancel
+      </button>
+      <button onclick="confirmCreateFile()" class="rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Create
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload file -->
+<div id="uploadFileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+  <div class="bg-white rounded-xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300">
+    <h2 class="text-xl sm:text-2xl font-medium mb-1 text-neutral-800">Upload File</h2>
+    <p class="mb-6 text-neutral-600 text-sm sm:text-base">Select a file to upload to the current directory.</p>
+    
+    <div class="mb-4">
+      <div class="mb-4">
+        <label for="fileInput" class="w-full px-3 py-8 sm:py-6 border-2 border-dashed border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-neutral-500 transition text-neutral-800 text-center cursor-pointer hover:bg-neutral-50 active:bg-neutral-100 block" id="dropZone">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12 sm:w-10 sm:h-10 mx-auto mb-3 sm:mb-2 text-neutral-400">
+            <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V16.5a.75.75 0 0 1-1.5 0V4.81L8.03 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+          </svg>
+          <p class="text-neutral-500 text-sm sm:text-base">Drag & drop a file here or tap to browse</p>
+        </label>
+        <input type="file" id="fileInput" class="hidden" onchange="handleFileInputChange(event)">
+      </div>
+      
+      <div id="filePreview" class="hidden">
+        <div class="flex items-center p-3 bg-neutral-100 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-3 text-neutral-600 flex-shrink-0">
+            <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+            <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+          </svg>
+          <div class="flex-1 min-w-0 mr-3">
+            <p id="selectedFileName" class="font-medium text-neutral-800 truncate text-sm"></p>
+            <p id="selectedFileSize" class="text-xs text-neutral-500 mt-1"></p>
+          </div>
+          <button onclick="removeSelectedFile()" class="p-2 text-neutral-400 hover:text-neutral-600 active:text-neutral-700 transition flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile: Stacked buttons -->
+   <div id="mobileUploadButtons" class="sm:hidden space-y-3">
+  <button onclick="closeUploadFileModal()" class="w-full py-3 px-4 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 active:bg-neutral-400 transition font-medium">
+    Cancel
+  </button>
+  <button id="uploadButtonMobile" class="w-full rounded-xl bg-neutral-950 hover:bg-neutral-800 active:bg-neutral-900 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+    Upload
+  </button>
+</div>
+<script>
+function toggleDesktopHiddenUpload() {
+  const mobileUploadButtons = document.getElementById('mobileUploadButtons');
+
+  if (window.innerWidth >= 640) { // desktop
+    mobileUploadButtons.classList.add('hidden'); // Tailwind
+    mobileUploadButtons.style.display = 'none';  // JS inline
+  } else { // mobile
+    mobileUploadButtons.classList.remove('hidden');
+    mobileUploadButtons.style.display = 'block';
+  }
+}
+
+toggleDesktopHiddenUpload();
+window.addEventListener('resize', toggleDesktopHiddenUpload);
+
+</script>
+    
+    <!-- Desktop: Side by side buttons -->
+    <div class="hidden sm:flex justify-end space-x-4">
+      <button onclick="closeUploadFileModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">
+        Cancel
+      </button>
+      <button id="uploadButton" class="rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+        Upload
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Rename Modal -->
+<div id="renameModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+  <div class="bg-white rounded-xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300">
+    <h2 class="text-xl sm:text-2xl font-medium mb-1 text-neutral-800">Rename File</h2>
+    <p class="mb-6 text-neutral-600 text-sm sm:text-base">Please enter a new name for this file.</p>
+    
+    <input type="text" id="newFileName" class="w-full px-3 py-3 sm:py-2 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-neutral-500 transition mb-4 text-neutral-800 text-base" placeholder="Enter new name">
+    <input type="hidden" id="currentFileName">
+    <input type="hidden" id="currentFilePath">
+    
+    <!-- Mobile: Stacked buttons -->
+    <div class="sm:hidden space-y-3">
+      <button onclick="closeRenameModal()" class="w-full py-3 px-4 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 active:bg-neutral-400 transition font-medium">
+        Cancel
+      </button>
+      <button onclick="confirmRename()" class="w-full rounded-xl bg-neutral-950 hover:bg-neutral-800 active:bg-neutral-900 text-white px-4 py-3 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Rename
+      </button>
+    </div>
+    
+    <!-- Desktop: Side by side buttons -->
+    <div class="hidden sm:flex justify-end space-x-4">
+      <button onclick="closeRenameModal()" class="px-5 py-2 bg-neutral-200 text-neutral-800 rounded-xl hover:bg-neutral-300 transition">
+        Cancel
+      </button>
+      <button onclick="confirmRename()" class="rounded-xl bg-neutral-950 hover:bg-neutral-800 text-white px-3 py-2 text-sm font-medium shadow-md transition focus:outline focus:outline-2 focus:outline-offset-2">
+        Rename
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Sync mobile and desktop action bar functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Sync delete buttons
+  const massDeleteBtn = document.getElementById('massDeleteBtn');
+  const massDeleteBtnMobile = document.getElementById('massDeleteBtnMobile');
+  const confirmMassDelete = document.getElementById('confirmMassDelete');
+  const confirmMassDeleteMobile = document.getElementById('confirmMassDeleteMobile');
+  
+  if (massDeleteBtnMobile && massDeleteBtn) {
+    massDeleteBtnMobile.onclick = massDeleteBtn.onclick;
+  }
+  
+  if (confirmMassDeleteMobile && confirmMassDelete) {
+    confirmMassDeleteMobile.onclick = confirmMassDelete.onclick;
+  }
+  
+  // Sync archive buttons
+  const massArchiveBtn = document.getElementById('massArchiveBtn');
+  const massArchiveBtnMobile = document.getElementById('massArchiveBtnMobile');
+  
+  if (massArchiveBtnMobile && massArchiveBtn) {
+    massArchiveBtnMobile.onclick = massArchiveBtn.onclick;
+  }
+  
+  // Sync upload buttons
+  const uploadButton = document.getElementById('uploadButton');
+  const uploadButtonMobile = document.getElementById('uploadButtonMobile');
+  
+  if (uploadButtonMobile && uploadButton) {
+    // Sync disabled state
+    const syncUploadButtons = () => {
+      uploadButtonMobile.disabled = uploadButton.disabled;
+    };
+    
+    // Initial sync
+    syncUploadButtons();
+    
+    // Watch for changes using MutationObserver
+    const observer = new MutationObserver(syncUploadButtons);
+    observer.observe(uploadButton, { attributes: true, attributeFilter: ['disabled'] });
+    
+    // Sync click handlers
+    uploadButtonMobile.onclick = uploadButton.onclick;
+  }
+  
+  // Sync file count displays
+  function syncFileCount() {
+    const desktopCount = document.getElementById('selectedFilesCount');
+    const mobileCount = document.getElementById('selectedFilesCountMobile');
+    
+    if (desktopCount && mobileCount) {
+      mobileCount.textContent = desktopCount.textContent;
+    }
+  }
+  
+  // Watch for file count changes
+  const countObserver = new MutationObserver(syncFileCount);
+  const selectedFilesCount = document.getElementById('selectedFilesCount');
+  if (selectedFilesCount) {
+    countObserver.observe(selectedFilesCount, { childList: true, characterData: true, subtree: true });
+  }
+});
+</script>
 </main>
 
 <%- include('../../components/toast')%>
@@ -378,14 +695,18 @@ function isImageFile(filename) {
 <script>
   function handleFileNameKeyPress(event) {
     if (event.key === 'Enter') {
-        event.preventDefault();
-        confirmCreateFile();
+      event.preventDefault();
+      confirmCreateFile();
     }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     if (typeof window.showImageViewer !== 'function' && typeof window.imageViewerSystem === 'function') {
-      const { showImageViewer, closeImageViewer, downloadViewedImage } = window.imageViewerSystem();
+      const {
+        showImageViewer,
+        closeImageViewer,
+        downloadViewedImage
+      } = window.imageViewerSystem();
       window.showImageViewer = showImageViewer;
       window.closeImageViewer = closeImageViewer;
       window.downloadViewedImage = downloadViewedImage;
@@ -409,7 +730,10 @@ function isImageFile(filename) {
   function showDropdown(event, fileName) {
     const dropdown = document.getElementById(`dropdown-${fileName}`);
 
-    const { clientX: mouseX, clientY: mouseY } = event;
+    const {
+      clientX: mouseX,
+      clientY: mouseY
+    } = event;
     const dropdownRect = dropdown.getBoundingClientRect();
     const bodyWidth = document.body.clientWidth;
 
@@ -469,49 +793,53 @@ function isImageFile(filename) {
 
       const loader = showLoadingPopup('Deleting File', 'Removing file from server...');
 
-      fetch('/server/<%= server.UUID %>/files/rm/' + encodeURIComponent(filePath), { method: 'DELETE' })
-      .then(response => {
-        loader.close();
-        if (response.ok) {
-          showToast(`File ${fileName} deleted successfully`, 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          showToast('Failed to delete file', 'error');
-        }
-      })
-      .catch(error => {
-        loader.close();
-        console.error('Error:', error);
-        showToast('An error occurred while deleting the file', 'error');
-      });
+      fetch('/server/<%= server.UUID %>/files/rm/' + encodeURIComponent(filePath), {
+          method: 'DELETE'
+        })
+        .then(response => {
+          loader.close();
+          if (response.ok) {
+            showToast(`File ${fileName} deleted successfully`, 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast('Failed to delete file', 'error');
+          }
+        })
+        .catch(error => {
+          loader.close();
+          console.error('Error:', error);
+          showToast('An error occurred while deleting the file', 'error');
+        });
     });
   }
 
   function downloadfile(fileName, filePath) {
-    fetch('/server/<%= server.UUID %>/files/download/' + encodeURIComponent(filePath), { method: 'GET' })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error downloading file: ${response.statusText}`);
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Download failed:', error);
-            showToast('Failed to download file', 'error');
-        });
-}
+    fetch('/server/<%= server.UUID %>/files/download/' + encodeURIComponent(filePath), {
+        method: 'GET'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error downloading file: ${response.statusText}`);
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        console.error('Download failed:', error);
+        showToast('Failed to download file', 'error');
+      });
+  }
 
- // File Select thingy
+  // File Select thingy
 
   const selectAllCheckbox = document.getElementById('selectAll');
   const fileCheckboxes = document.querySelectorAll('.file-checkbox:not(#selectAll)');
@@ -527,24 +855,24 @@ function isImageFile(filename) {
   function updateSelectedFiles() {
     const selectedCount = selectedFiles.length;
     if (selectedFiles.length > 0) {
-    floatingActionBar.classList.remove('translate-y-full');
-  } else {
-    floatingActionBar.classList.add('translate-y-full');
-  }
+      floatingActionBar.classList.remove('translate-y-full');
+    } else {
+      floatingActionBar.classList.add('translate-y-full');
+    }
     document.getElementById('selectedFilesCount').innerText = `${selectedCount} file${selectedCount !== 1 ? 's' : ''} selected`;
 
     document.getElementById('massDeleteBtn').disabled = selectedCount === 0;
     document.getElementById('massArchiveBtn').disabled = selectedCount === 0;
-}
+  }
 
-document.getElementById('massArchiveBtn').addEventListener('click', () => {
+  document.getElementById('massArchiveBtn').addEventListener('click', () => {
     if (selectedFiles.length > 0) {
-        // Create archive confirmation modal
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300';
-        modal.id = 'archiveConfirmModal';
+      // Create archive confirmation modal
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300';
+      modal.id = 'archiveConfirmModal';
 
-        modal.innerHTML = `
+      modal.innerHTML = `
           <div class="bg-white rounded-xl p-8 max-w-md w-full transform scale-95 transition-transform duration-300">
             <h2 class="text-2xl font-medium mb-1 text-neutral-800">Confirm Archive</h2>
             <p class="mb-6 text-neutral-600">Are you sure you want to archive ${selectedFiles.length} selected file${selectedFiles.length !== 1 ? 's' : ''}?</p>
@@ -555,167 +883,169 @@ document.getElementById('massArchiveBtn').addEventListener('click', () => {
           </div>
         `;
 
-        document.body.appendChild(modal);
+      document.body.appendChild(modal);
 
-        setTimeout(() => {
-          modal.classList.remove('opacity-0', 'pointer-events-none');
-          modal.querySelector('div').classList.remove('scale-95');
-          modal.querySelector('div').classList.add('scale-100');
-        }, 10);
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.querySelector('div').classList.remove('scale-95');
+        modal.querySelector('div').classList.add('scale-100');
+      }, 10);
 
-        document.getElementById('cancelArchiveBtn').addEventListener('click', () => {
-          modal.classList.add('opacity-0', 'pointer-events-none');
-          modal.querySelector('div').classList.remove('scale-100');
-          modal.querySelector('div').classList.add('scale-95');
-          setTimeout(() => document.body.removeChild(modal), 300);
-        });
+      document.getElementById('cancelArchiveBtn').addEventListener('click', () => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => document.body.removeChild(modal), 300);
+      });
 
-        document.getElementById('confirmArchiveBtn').addEventListener('click', () => {
-          modal.classList.add('opacity-0', 'pointer-events-none');
-          modal.querySelector('div').classList.remove('scale-100');
-          modal.querySelector('div').classList.add('scale-95');
-          setTimeout(() => document.body.removeChild(modal), 300);
+      document.getElementById('confirmArchiveBtn').addEventListener('click', () => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => document.body.removeChild(modal), 300);
 
-          archiveFiles(selectedFiles);
-        });
+        archiveFiles(selectedFiles);
+      });
     }
-});
-
-function initializeSelectedFiles() {
-  const storedSelectedFiles = JSON.parse(sessionStorage.getItem('selectedFiles') || '[]');
-  fileCheckboxes.forEach(checkbox => {
-    checkbox.checked = storedSelectedFiles.includes(checkbox.dataset.filename);
   });
-  updateSelectedFiles();
-}
 
-// Select All functionality
-selectAllCheckbox.addEventListener('change', event => {
+  function initializeSelectedFiles() {
+    const storedSelectedFiles = JSON.parse(sessionStorage.getItem('selectedFiles') || '[]');
+    fileCheckboxes.forEach(checkbox => {
+      checkbox.checked = storedSelectedFiles.includes(checkbox.dataset.filename);
+    });
+    updateSelectedFiles();
+  }
+
+  // Select All functionality
+  selectAllCheckbox.addEventListener('change', event => {
     const isChecked = event.target.checked;
 
     // Get all file checkboxes (excluding the select all checkbox itself)
     const fileCheckboxes = document.querySelectorAll('.file-checkbox:not(#selectAll)');
 
     fileCheckboxes.forEach(checkbox => {
-        checkbox.checked = isChecked;
-        const fileName = checkbox.dataset.filename;
+      checkbox.checked = isChecked;
+      const fileName = checkbox.dataset.filename;
 
-        if (isChecked) {
-            if (!selectedFiles.includes(fileName)) {
-                selectedFiles.push(fileName);
-            }
-        } else {
-            selectedFiles = selectedFiles.filter(name => name !== fileName);
+      if (isChecked) {
+        if (!selectedFiles.includes(fileName)) {
+          selectedFiles.push(fileName);
         }
+      } else {
+        selectedFiles = selectedFiles.filter(name => name !== fileName);
+      }
     });
 
     updateSelectedFiles();
-});
+  });
 
-document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+  document.querySelectorAll('.file-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', event => {
-        const fileName = event.target.dataset.filename;
+      const fileName = event.target.dataset.filename;
 
-        if (event.target.checked) {
-            selectedFiles.push(fileName);
-        } else {
-            selectedFiles = selectedFiles.filter(name => name !== fileName);
-        }
+      if (event.target.checked) {
+        selectedFiles.push(fileName);
+      } else {
+        selectedFiles = selectedFiles.filter(name => name !== fileName);
+      }
 
-        // Update select all checkbox state
-        const fileCheckboxes = document.querySelectorAll('.file-checkbox:not(#selectAll)');
-        const checkedCount = document.querySelectorAll('.file-checkbox:not(#selectAll):checked').length;
-        selectAllCheckbox.checked = checkedCount === fileCheckboxes.length;
-        selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < fileCheckboxes.length;
+      // Update select all checkbox state
+      const fileCheckboxes = document.querySelectorAll('.file-checkbox:not(#selectAll)');
+      const checkedCount = document.querySelectorAll('.file-checkbox:not(#selectAll):checked').length;
+      selectAllCheckbox.checked = checkedCount === fileCheckboxes.length;
+      selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < fileCheckboxes.length;
 
-        updateSelectedFiles();
+      updateSelectedFiles();
     });
-});
+  });
 
-function archiveFiles(files) {
+  function archiveFiles(files) {
     const loader = showLoadingPopup('Creating Archive', 'Preparing files for archiving...');
     loader.updateProgress(20, 'Compressing files...');
 
     fetch('/server/<%= server.UUID %>/zip', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           relativePath: files,
           zipname: 'archive'
-         })
-    })
-    .then(response => response.json())
-    .then(data => {
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
         loader.updateProgress(100, 'Archive created!');
         setTimeout(() => {
-            loader.close();
-            if (data.success) {
-                showToast('Files archived successfully!', 'success');
-                selectedFiles = [];
-                updateSelectedFiles();
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showToast('Failed to archive files', 'error');
-            }
+          loader.close();
+          if (data.success) {
+            showToast('Files archived successfully!', 'success');
+            selectedFiles = [];
+            updateSelectedFiles();
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast('Failed to archive files', 'error');
+          }
         }, 500);
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         loader.close();
         console.error('Error:', error);
         showToast('An error occurred while creating the archive', 'error');
-    });
-}
-
-massDeleteBtn.addEventListener('click', function() {
-  massDeleteMessage.textContent = `Are you sure you want to delete ${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''}? This is a permanent action and cannot be reversed.`;
-  massDeleteModal.classList.remove('opacity-0', 'pointer-events-none');
-  massDeleteModal.querySelector('div').classList.remove('scale-95');
-  massDeleteModal.querySelector('div').classList.add('scale-100');
-});
-
-function closeMassDeleteModal() {
-  massDeleteModal.classList.add('opacity-0', 'pointer-events-none');
-  massDeleteModal.querySelector('div').classList.remove('scale-100');
-  massDeleteModal.querySelector('div').classList.add('scale-95');
-}
-
-confirmMassDeleteBtn.addEventListener('click', async function() {
-  closeMassDeleteModal();
-
-  const loader = showLoadingPopup('Deleting Files', `Removing ${selectedFiles.length} files...`);
-  loader.updateProgress(10, 'Processing deletion requests...');
-
-  const deletePromises = selectedFiles.map(fileName =>
-    fetch('/server/<%= server.UUID %>/files/rm/' + encodeURIComponent(fileName), { method: 'DELETE' })
-  );
-
-  try {
-    await Promise.all(deletePromises);
-    loader.updateProgress(100, 'Files deleted successfully!');
-    setTimeout(() => {
-      loader.close();
-      showToast(`${selectedFiles.length} files deleted successfully`, 'success');
-      setTimeout(() => window.location.reload(), 1000);
-    }, 500);
-  } catch (error) {
-    loader.close();
-    console.error('Error deleting files:', error);
-    showToast('Failed to delete files', 'error');
+      });
   }
-});
 
-document.addEventListener('DOMContentLoaded', initializeSelectedFiles);
+  massDeleteBtn.addEventListener('click', function() {
+    massDeleteMessage.textContent = `Are you sure you want to delete ${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''}? This is a permanent action and cannot be reversed.`;
+    massDeleteModal.classList.remove('opacity-0', 'pointer-events-none');
+    massDeleteModal.querySelector('div').classList.remove('scale-95');
+    massDeleteModal.querySelector('div').classList.add('scale-100');
+  });
 
-window.addEventListener('beforeunload', () => {
-  sessionStorage.removeItem('selectedFiles');
-});
+  function closeMassDeleteModal() {
+    massDeleteModal.classList.add('opacity-0', 'pointer-events-none');
+    massDeleteModal.querySelector('div').classList.remove('scale-100');
+    massDeleteModal.querySelector('div').classList.add('scale-95');
+  }
 
-updateSelectedFiles();
+  confirmMassDeleteBtn.addEventListener('click', async function() {
+    closeMassDeleteModal();
 
-// New File
-function openCreateFileModal() {
+    const loader = showLoadingPopup('Deleting Files', `Removing ${selectedFiles.length} files...`);
+    loader.updateProgress(10, 'Processing deletion requests...');
+
+    const deletePromises = selectedFiles.map(fileName =>
+      fetch('/server/<%= server.UUID %>/files/rm/' + encodeURIComponent(fileName), {
+        method: 'DELETE'
+      })
+    );
+
+    try {
+      await Promise.all(deletePromises);
+      loader.updateProgress(100, 'Files deleted successfully!');
+      setTimeout(() => {
+        loader.close();
+        showToast(`${selectedFiles.length} files deleted successfully`, 'success');
+        setTimeout(() => window.location.reload(), 1000);
+      }, 500);
+    } catch (error) {
+      loader.close();
+      console.error('Error deleting files:', error);
+      showToast('Failed to delete files', 'error');
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', initializeSelectedFiles);
+
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.removeItem('selectedFiles');
+  });
+
+  updateSelectedFiles();
+
+  // New File
+  function openCreateFileModal() {
     const modal = document.getElementById('createFileModal');
     const input = document.getElementById('FileName');
 
@@ -746,7 +1076,9 @@ function openCreateFileModal() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ content: '' }),
+          body: JSON.stringify({
+            content: ''
+          }),
         });
 
         if (createFile.ok) {
@@ -809,29 +1141,29 @@ function openCreateFileModal() {
       const loader = showLoadingPopup('Renaming File', 'Processing rename request...');
 
       fetch(`/server/<%= server.UUID %>/rename`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          path: filePath,
-          newName: newName
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            path: filePath,
+            newName: newName
+          })
         })
-      })
-      .then(response => {
-        loader.close();
-        if (response.ok) {
-          showToast(`File renamed to ${newName} successfully`, 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else {
+        .then(response => {
+          loader.close();
+          if (response.ok) {
+            showToast(`File renamed to ${newName} successfully`, 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast('Failed to rename file', 'error');
+          }
+        })
+        .catch(error => {
+          loader.close();
+          console.error('Renaming failed:', error);
           showToast('Failed to rename file', 'error');
-        }
-      })
-      .catch(error => {
-        loader.close();
-        console.error('Renaming failed:', error);
-        showToast('Failed to rename file', 'error');
-      });
+        });
     } else {
       closeRenameModal();
     }
@@ -851,37 +1183,37 @@ function openCreateFileModal() {
 
   async function extractZip(fileName, filePath) {
     try {
-        const loader = showLoadingPopup('Extracting Archive', 'Preparing to extract files...');
-        loader.updateProgress(20, 'Extracting files...');
+      const loader = showLoadingPopup('Extracting Archive', 'Preparing to extract files...');
+      loader.updateProgress(20, 'Extracting files...');
 
-        const parentPath = filePath.substring(0, filePath.lastIndexOf('/'));
+      const parentPath = filePath.substring(0, filePath.lastIndexOf('/'));
 
-        const response = await fetch(`/server/<%= server.UUID %>/unzip`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                relativePath: parentPath || '/',
-                zipname: fileName
-            })
-        });
+      const response = await fetch(`/server/<%= server.UUID %>/unzip`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          relativePath: parentPath || '/',
+          zipname: fileName
+        })
+      });
 
-        if (response.ok) {
-            loader.updateProgress(100, 'Files extracted successfully!');
-            setTimeout(() => {
-                loader.close();
-                showToast('File extracted successfully', 'success');
-                setTimeout(() => location.reload(), 1000);
-            }, 500);
-        } else {
-            loader.close();
-            const error = await response.json();
-            showToast(error.error || 'Failed to extract file', 'error');
-        }
+      if (response.ok) {
+        loader.updateProgress(100, 'Files extracted successfully!');
+        setTimeout(() => {
+          loader.close();
+          showToast('File extracted successfully', 'success');
+          setTimeout(() => location.reload(), 1000);
+        }, 500);
+      } else {
+        loader.close();
+        const error = await response.json();
+        showToast(error.error || 'Failed to extract file', 'error');
+      }
     } catch (error) {
-        console.error('Error extracting file:', error);
-        showToast('Failed to extract file', 'error');
+      console.error('Error extracting file:', error);
+      showToast('Failed to extract file', 'error');
     }
   }
 

@@ -3,9 +3,16 @@
 <main class="h-screen m-auto">
   <div class="flex h-screen">
     <!-- Sidebar -->
-    <div class="w-60 h-full">
-      <%- include('../../components/template') %>
+<div class="hidden sm:block w-60 h-full">
+  <%- include('../../components/template') %>
+</div>
+
+<!-- Mobile button -->
+    <div class="block lg:hidden">
+    <%- include('../../components/mobile') %>
     </div>
+
+
     <!-- Content -->
     <div class="flex-1 p-6 overflow-y-auto pt-16">
       <div class="sm:flex sm:items-center px-8 pt-4">
@@ -91,69 +98,155 @@
       <% } %>
 
       <!-- Table of nodes -->
-      <div class="overflow-hidden shadow rounded-lg m-8 border border-neutral-800/20" id="nodeTable">
-        <table class="min-w-full divide-y divide-white/10">
-          <thead class="bg-white/5">
-            <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.name %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.connection %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.instances %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.actions %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/5 bg-white/5">
-            <% nodes.forEach(function(node) { %>
-              <tr class="hover:bg-white/[0.05] transition-colors clickable-row cursor-pointer" onclick="handleRowClick(event, '/admin/node/<%= node.id %>/stats')">
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                  <div class="flex items-center">
-                    <div class="mr-5">
-                      <% if (node.status == "Online") { %>
-                        <span class="flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                      <% } else if (node.status == "Offline") { %>
-                        <span class="flex h-2 w-2 group relative">
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                          <% if (node.error) { %>
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-1 w-48 bg-neutral-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                              <%= node.error %>
-                            </div>
-                          <% } %>
-                        </span>
-                      <% } else { %>
-                        <span class="flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-amber-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                        </span>
+<div class="m-4 sm:m-8" id="nodeTable">
+  <!-- Desktop Table View (hidden on mobile) -->
+  <div id="desktopTable" class="overflow-hidden shadow rounded-lg border border-neutral-800/20">
+    <table class="min-w-full divide-y divide-white/10">
+      <thead class="bg-white/5">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.name %></th>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.connection %></th>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.instances %></th>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.actions %></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5 bg-white/5">
+        <% nodes.forEach(function(node) { %>
+          <tr class="hover:bg-white/[0.05] transition-colors clickable-row cursor-pointer" onclick="handleRowClick(event, '/admin/node/<%= node.id %>/stats')">
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+              <div class="flex items-center">
+                <div class="mr-5">
+                  <% if (node.status == "Online") { %>
+                    <span class="flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                  <% } else if (node.status == "Offline") { %>
+                    <span class="flex h-2 w-2 group relative">
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      <% if (node.error) { %>
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-1 w-48 bg-neutral-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                          <%= node.error %>
+                        </div>
                       <% } %>
-                    </div>
-                    <div class="font-medium text-neutral-800 dark:text-white"><%= node.name %></div>
-                  </div>
-                </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400"><%= node.address %>:<%= node.port %>
-                  <div class="mt-1 ml-2 inline-flex items-center rounded-md
-                  <%= node.versionRelease ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-red-600/10 text-red-400 ring-red-600/20' %>
-                  px-2 py-1 text-xs font-medium ring-1 ring-inset">
-                    <%= node.versionRelease || 'unknown' %>
-                  </div></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400"><%= node.instances ? node.instances.length : 0 %></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                  <div class="flex gap-3">
-                    <button onclick="configure('<%= node.id %>')" type="button" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Configure</button>
-                    <a href="./node/<%= node.id %>">
-                      <button type="button" class="rounded-xl bg-white border border-neutral-800/20 hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Edit</button>
-                    </a>
-                    <button onclick="deleteNode('<%= node.id %>')" type="button" class="rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition">Remove</button>
-                  </div>
-                </td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+                    </span>
+                  <% } else { %>
+                    <span class="flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-amber-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
+                  <% } %>
+                </div>
+                <div class="font-medium text-neutral-800 dark:text-white"><%= node.name %></div>
+              </div>
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400"><%= node.address %>:<%= node.port %>
+              <div class="mt-1 ml-2 inline-flex items-center rounded-md
+              <%= node.versionRelease ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-red-600/10 text-red-400 ring-red-600/20' %>
+              px-2 py-1 text-xs font-medium ring-1 ring-inset">
+                <%= node.versionRelease || 'unknown' %>
+              </div></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400"><%= node.instances ? node.instances.length : 0 %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm">
+              <div class="flex gap-3">
+                <button onclick="configure('<%= node.id %>')" type="button" class="rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Configure</button>
+                <a href="./node/<%= node.id %>">
+                  <button type="button" class="rounded-xl bg-white border border-neutral-800/20 hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Edit</button>
+                </a>
+                <button onclick="deleteNode('<%= node.id %>')" type="button" class="rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition">Remove</button>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
   </div>
+
+  <!-- Mobile Card View (visible only on mobile) -->
+  <div id="mobileCards" class="space-y-4">
+    <% nodes.forEach(function(node) { %>
+      <div class="bg-white/5 border border-neutral-800/20 rounded-lg shadow p-4 hover:bg-white/[0.05] transition-colors">
+        <!-- Node Info Header -->
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center">
+            <div class="mr-3">
+              <% if (node.status == "Online") { %>
+                <span class="flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+              <% } else if (node.status == "Offline") { %>
+                <span class="flex h-2 w-2 group relative">
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  <% if (node.error) { %>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-1 w-48 bg-neutral-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                      <%= node.error %>
+                    </div>
+                  <% } %>
+                </span>
+              <% } else { %>
+                <span class="flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+              <% } %>
+            </div>
+            <div class="font-medium text-neutral-800 dark:text-white text-base"><%= node.name %></div>
+          </div>
+          <div class="inline-flex items-center rounded-md
+          <%= node.versionRelease ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-red-600/10 text-red-400 ring-red-600/20' %>
+          px-2 py-1 text-xs font-medium ring-1 ring-inset">
+            <%= node.versionRelease || 'unknown' %>
+          </div>
+        </div>
+
+        <!-- Connection Info -->
+        <div class="mb-3">
+          <span class="text-sm text-neutral-500 dark:text-neutral-400"><%= req.translations.connection %>:</span>
+          <div class="text-sm text-neutral-800 dark:text-white mt-1 break-all"><%= node.address %>:<%= node.port %></div>
+        </div>
+
+        <!-- Instances Info -->
+        <div class="mb-4">
+          <span class="text-sm text-neutral-500 dark:text-neutral-400"><%= req.translations.instances %>:</span>
+          <span class="text-sm text-neutral-800 dark:text-white ml-2"><%= node.instances ? node.instances.length : 0 %></span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col space-y-2">
+          <button onclick="configure('<%= node.id %>')" type="button" class="w-full rounded-xl border border-neutral-800/20 bg-white hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Configure</button>
+          <div class="flex space-x-2">
+            <a href="./node/<%= node.id %>" class="flex-1">
+              <button type="button" class="w-full rounded-xl bg-white border border-neutral-800/20 hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">Edit</button>
+            </a>
+            <button onclick="deleteNode('<%= node.id %>')" type="button" class="flex-1 rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition">Remove</button>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<script>
+function toggleNodeView() {
+  const mobileCards = document.getElementById('mobileCards');
+  const desktopTable = document.getElementById('desktopTable');
+  
+  if (window.innerWidth >= 640) { // sm breakpoint
+    mobileCards.style.display = 'none';
+    desktopTable.style.display = 'block';
+  } else {
+    mobileCards.style.display = 'block';
+    desktopTable.style.display = 'none';
+  }
+}
+
+// Run on load
+toggleNodeView();
+
+// Run on resize
+window.addEventListener('resize', toggleNodeView);
+</script>
 </main>
 
 <%- include('../../components/toast') %>

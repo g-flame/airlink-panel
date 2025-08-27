@@ -3,8 +3,13 @@
 <main class="h-screen m-auto">
   <div class="flex h-screen">
     <!-- Sidebar -->
-    <div class="w-60 h-full">
+    <div class="hidden sm:block w-60 h-full">
       <%- include('../../components/template') %>
+    </div>
+
+    <!-- Mobile button -->
+    <div class="block lg:hidden">
+      <%- include('../../components/mobile') %>
     </div>
     <!-- Content -->
     <div class="flex-1 p-6 overflow-y-auto pt-16">
@@ -28,67 +33,69 @@
           <h2 class="text-lg font-medium text-neutral-800 dark:text-white mb-2"><%= req.translations.totalUsers %></h2>
           <p class="text-4xl font-normal text-neutral-800 dark:text-white"><%= users.length %></p>
           <% if (onlineUsers.size > 0) { %>
-            <p class="text-sm text-neutral-400 mt-2"><%= req.translations.onlineUsers || 'Online Users' %>: <%= onlineUsers.size %></p>
+          <p class="text-sm text-neutral-400 mt-2"><%= req.translations.onlineUsers || 'Online Users' %>: <%= onlineUsers.size %></p>
           <% } else { %>
-            <p class="text-sm text-neutral-400 mt-2"><%= req.translations.noUsersOnline || 'No Users Online' %></p>
+          <p class="text-sm text-neutral-400 mt-2"><%= req.translations.noUsersOnline || 'No Users Online' %></p>
           <% } %>
         </div>
         <div class="bg-white/5 rounded-xl p-6 shadow-lg border border-neutral-800/20">
           <h2 class="text-lg font-medium text-neutral-800 dark:text-white mb-2"><%= req.translations.admins || 'Admins' %></h2>
-            <p class="text-4xl font-normal text-neutral-800 dark:text-white"><%= users.filter(user => user.isAdmin).length %></p>
-            <% if (onlineUsers.size > 0) { %>
-              <p class="text-sm text-neutral-400 mt-2"><%= req.translations.onlineUsers || 'Online Admins' %>: <%= Array.from(onlineUsers).filter(username => users.some(user => user.username === username && user.isAdmin)).length %></p>
-            <% } else { %>
-              <p class="text-sm text-neutral-400 mt-2"><%= req.translations.noUsersOnline || 'No Users Online' %></p>
-            <% } %>
+          <p class="text-4xl font-normal text-neutral-800 dark:text-white"><%= users.filter(user => user.isAdmin).length %></p>
+          <% if (onlineUsers.size > 0) { %>
+          <p class="text-sm text-neutral-400 mt-2"><%= req.translations.onlineUsers || 'Online Admins' %>: <%= Array.from(onlineUsers).filter(username => users.some(user => user.username === username && user.isAdmin)).length %></p>
+          <% } else { %>
+          <p class="text-sm text-neutral-400 mt-2"><%= req.translations.noUsersOnline || 'No Users Online' %></p>
+          <% } %>
         </div>
       </div>
 
       <!-- notifications -->
       <% if (req.query.err == "none") { %>
-        <div class="mt-6 ml-8 mr-8">
-          <div class="rounded-xl bg-emerald-600/20 dark:bg-emerald-800/10 px-4 py-6 shadow-lg border border-neutral-800/20">
-            <div class="flex">
-              <div class="flex-shrink-0 ml-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mt-2 text-emerald-400">
-                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-5">
-                <h3 class="text-sm font-medium text-emerald-400"><%= req.translations.success %>!</h3>
-                <p class="text-sm text-emerald-400/50"><%= req.translations.actionCompleted %></p>
-              </div>
+      <div class="mt-6 ml-8 mr-8">
+        <div class="rounded-xl bg-emerald-600/20 dark:bg-emerald-800/10 px-4 py-6 shadow-lg border border-neutral-800/20">
+          <div class="flex">
+            <div class="flex-shrink-0 ml-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mt-2 text-emerald-400">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-5">
+              <h3 class="text-sm font-medium text-emerald-400"><%= req.translations.success %>!</h3>
+              <p class="text-sm text-emerald-400/50"><%= req.translations.actionCompleted %></p>
             </div>
           </div>
         </div>
+      </div>
       <% } %>
 
       <!-- Table of users -->
-      <div class="overflow-hidden shadow rounded-lg m-8 border border-neutral-800/20" id="userTable">
-        <table class="min-w-full divide-y divide-white/10">
-          <thead class="bg-white/5">
-            <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.name %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.role %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.instances %></th>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.actions %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/5 bg-white/5">
-            <% users.forEach(function(user) { %>
+      <div class="m-4 sm:m-8" id="userTable">
+        <!-- Desktop Table View (hidden on mobile) -->
+        <div class="hidden sm:block overflow-hidden shadow rounded-lg border border-neutral-800/20">
+          <table class="min-w-full divide-y divide-white/10">
+            <thead class="bg-white/5">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.name %></th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.role %></th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.instances %></th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-neutral-800 dark:text-white sm:pl-6"><%= req.translations.actions %></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 bg-white/5">
+              <% users.forEach(function(user) { %>
               <tr class="hover:bg-white/[0.05] transition-colors clickable-row cursor-pointer" onclick="handleRowClick(event, '/admin/users/view/<%= user.id %>/')">
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                   <div class="flex items-center">
                     <div class="mr-5">
                       <% if (onlineUsers.has(user.username)) { %>
-                        <span class="flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
+                      <span class="flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
                       <% } else { %>
-                        <span class="flex h-2 w-2">
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-neutral-500"></span>
-                        </span>
+                      <span class="flex h-2 w-2">
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-neutral-500"></span>
+                      </span>
                       <% } %>
                     </div>
                     <div class="font-medium text-neutral-800 dark:text-white"><%= user.username %></div>
@@ -96,10 +103,11 @@
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400">
                   <div class="mt-1 ml-2 inline-flex items-center rounded-md
-                  <%= user.isAdmin ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-amber-600/10 text-amber-400 ring-red-600/20' %>
-                  px-2 py-1 text-xs font-medium ring-1 ring-inset">
+              <%= user.isAdmin ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-amber-600/10 text-amber-400 ring-red-600/20' %>
+              px-2 py-1 text-xs font-medium ring-1 ring-inset">
                     <%= user.isAdmin ? 'Admin' : 'User' %>
-                  </div></td>
+                  </div>
+                </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-neutral-400"><%= user.servers ? user.servers.length : 0 %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                   <div class="flex gap-3">
@@ -113,14 +121,83 @@
                   </div>
                 </td>
               </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</main>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
 
+        <!-- Mobile Card View (visible only on mobile) -->
+        <div id="mobileCards" class="space-y-4">
+          <% users.forEach(function(user) { %>
+          <div class="bg-white/5 border border-neutral-800/20 rounded-lg shadow p-4 hover:bg-white/[0.05] transition-colors">
+            <!-- User Info Header -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center">
+                <div class="mr-3">
+                  <% if (onlineUsers.has(user.username)) { %>
+                  <span class="flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <% } else { %>
+                  <span class="flex h-2 w-2">
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-neutral-500"></span>
+                  </span>
+                  <% } %>
+                </div>
+                <div class="font-medium text-neutral-800 dark:text-white text-base"><%= user.username %></div>
+              </div>
+              <div class="inline-flex items-center rounded-md
+          <%= user.isAdmin ? 'bg-emerald-600/10 text-emerald-400 ring-emerald-600/20' : 'bg-amber-600/10 text-amber-400 ring-red-600/20' %>
+          px-2 py-1 text-xs font-medium ring-1 ring-inset">
+                <%= user.isAdmin ? 'Admin' : 'User' %>
+              </div>
+            </div>
+
+            <!-- Instances Info -->
+            <div class="mb-4">
+              <span class="text-sm text-neutral-500 dark:text-neutral-400"><%= req.translations.instances %>:</span>
+              <span class="text-sm text-neutral-800 dark:text-white ml-2"><%= user.servers ? user.servers.length : 0 %></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col space-y-2">
+              <a href="/admin/users/view/<%= user.id %>/" class="w-full">
+                <button type="button" class="w-full rounded-xl bg-white border border-neutral-800/20 hover:bg-neutral-300 text-neutral-800 px-3 py-2 text-center text-sm font-medium shadow-lg transition">View</button>
+              </a>
+              <div class="flex space-x-2">
+                <a href="/admin/users/edit/<%= user.id %>/" class="flex-1">
+                  <button type="button" class="w-full rounded-xl bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-blue-500 transition">Edit</button>
+                </a>
+                <button onclick="deleteUser('<%= user.id %>')" type="button" class="flex-1 rounded-xl bg-red-600 px-3 py-2 text-center text-sm font-medium text-white shadow-lg hover:bg-red-500 transition">Remove</button>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <script>
+        function toggleMobileView() {
+          const mobileCards = document.getElementById('mobileCards');
+          const desktopTable = document.querySelector('.hidden.sm\\:block');
+
+          if (window.innerWidth >= 640) { // sm breakpoint
+            mobileCards.style.display = 'none';
+            desktopTable.style.display = 'block';
+          } else {
+            mobileCards.style.display = 'block';
+            desktopTable.style.display = 'none';
+          }
+        }
+
+        // Run on load
+        toggleMobileView();
+
+        // Run on resize
+        window.addEventListener('resize', toggleMobileView);
+      </script>
+</main>
 <%- include('../../components/toast')%>
 
 <script>
