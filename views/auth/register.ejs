@@ -1,61 +1,31 @@
 <%- include('../components/header', { title: 'Register'}) %>
-
-<style>
-  /* Mobile background visible under the card; removed on lg+ for desktop side image */
-  .mobile-bg {
-    background-image: url('https://img.freepik.com/free-vector/natural-landscape-wallpaper-concept_23-2148650600.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .mobile-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.18);
-    z-index: 0;
-  }
-
-  @media (min-width: 1024px) {
-    .mobile-bg { background-image: none !important; }
-    .mobile-bg::before { background: transparent; }
-  }
-</style>
-
-<div class="min-h-full flex mobile-bg">
+<div class="min-h-full flex">
   <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-    <div class="mx-auto w-full max-w-sm lg:w-96 relative z-50">
-      <!-- BOXED CARD START (solid #141414) -->
-      <div class="rounded-2xl shadow-lg p-6 sm:p-8 text-white" style="background-color:#141414;">
-        <div>
-          <% if (settings.logo) { %>
-            <img class="h-12 w-auto rounded-xl" src="<%= settings.logo %>" alt="Logo">
-          <% } %>
-          <h2 class="mt-6 text-3xl font-medium text-white">Register an account</h2>
-          <p class="mt-2 text-sm text-neutral-300">
-            Please enter your details below.
-          </p>
-        </div>
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+      <div>
+        <img class="h-12 w-auto rounded-xl" src="<%= settings.logo %>" alt="">
+        <h2 class="mt-6 text-3xl font-medium text-white">Register an account</h2>
+        <p class="mt-2 text-sm text-neutral-500">
+          Please enter your details below.
+        </p>
+      </div>
 
-        <div class="mt-8">
+      <div class="mt-8">
+        <div class="mt-6">
           <form method="POST" action="/register" class="space-y-6">
             <%- include('../components/csrf') %>
-
-            <!-- Error Messages -->
+            
+            <!-- Error Messages Section -->
             <% if (req.query.err) { %>
-              <div class="bg-red-900/40 border border-red-700/60 rounded-lg p-4 mb-4">
+              <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
                 <div class="flex">
                   <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-300" viewBox="0 0 20 20" fill="currentColor">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                     </svg>
                   </div>
                   <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-200">
+                    <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
                       <% if (req.query.err === 'missing_credentials') { %>
                         Missing Information
                       <% } else if (req.query.err === 'invalid_input') { %>
@@ -70,7 +40,7 @@
                         Registration Error
                       <% } %>
                     </h3>
-                    <div class="mt-2 text-sm text-red-200">
+                    <div class="mt-2 text-sm text-red-700 dark:text-red-300">
                       <% if (req.query.err === 'missing_credentials') { %>
                         Please fill in all required fields: username, email, and password.
                       <% } else if (req.query.err === 'invalid_input') { %>
@@ -90,7 +60,6 @@
               </div>
             <% } %>
 
-            <!-- Username -->
             <div>
               <label for="username" class="block text-sm font-medium text-neutral-400"> Username </label>
               <div class="mt-1">
@@ -98,7 +67,6 @@
               </div>
             </div>
 
-            <!-- Email -->
             <div>
               <label for="email" class="block text-sm font-medium text-neutral-400"> Email </label>
               <div class="mt-1">
@@ -106,8 +74,7 @@
               </div>
             </div>
 
-            <!-- Password -->
-           <div class="space-y-1">
+            <div class="space-y-1">
               <label for="password" class="block text-sm font-medium text-neutral-400">Password</label>
               <div class="mt-1">
                 <input
@@ -122,24 +89,79 @@
               </div>
             </div>
 
-            <!-- Submit -->
             <div>
-              <button type="submit" class="w-full flex transition justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-black bg-white hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500">Register</button>
+              <button type="submit" class="w-full flex transition justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-neutral-800 bg-white hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500">Register</button>
             </div>
           </form>
         </div>
       </div>
-      <!-- BOXED CARD END -->
-
       <div class="mt-6 text-sm text-neutral-500">
         Already have an account? <a href="/login" class="font-normal text-neutral-500 hover:text-white transition ">Sign in</a>
       </div>
     </div>
-
-  <!-- desktop side image -->
+  </div>
   <div class="hidden lg:block relative w-0 flex-1">
     <img class="absolute inset-0 h-full w-full object-cover" src="https://i.imgur.com/8G5eRWX.jpeg" alt="">
   </div>
 </div>
-
 <%- include('../components/footer') %>
+
+<script>
+  const passwordInput = document.getElementById('password');
+  const criteriaList = document.createElement('div');
+  criteriaList.className = 'mt-2 text-sm';
+
+  const updatePasswordStrength = () => {
+    const password = passwordInput.value;
+    const criteria = {
+      length: password.length >= 8,
+      letter: /[A-Za-z]/.test(password),
+      number: /\d/.test(password)
+    };
+
+    // Password validation logging
+    console.group('Password Validation Check');
+    console.log('Current password length:', password.length);
+    console.log('Requirements status:');
+    console.log('✓ Length (8+ chars):', criteria.length ? 'Passed' : 'Failed');
+    console.log('✓ Contains letter:', criteria.letter ? 'Passed' : 'Failed');
+    console.log('✓ Contains number:', criteria.number ? 'Passed' : 'Failed');
+
+    // Log missing requirements
+    const missing = [];
+    if (!criteria.length) missing.push('Need at least 8 characters');
+    if (!criteria.letter) missing.push('Need at least one letter');
+    if (!criteria.number) missing.push('Need at least one number');
+
+    if (missing.length > 0) {
+      console.warn('Missing requirements:', missing);
+    } else {
+      console.log('✅ All requirements met!');
+    }
+    console.groupEnd();
+
+    criteriaList.innerHTML = `
+      <ul class="space-y-1">
+        <li class="${criteria.length ? 'text-green-500' : 'text-red-500'}">
+          ${criteria.length ? '✓' : '✗'} At least 8 characters
+        </li>
+        <li class="${criteria.letter ? 'text-green-500' : 'text-red-500'}">
+          ${criteria.letter ? '✓' : '✗'} At least one letter
+        </li>
+        <li class="${criteria.number ? 'text-green-500' : 'text-red-500'}">
+          ${criteria.number ? '✓' : '✗'} At least one number
+        </li>
+      </ul>
+    `;
+  };
+
+  // Add debounce to avoid too frequent console logs
+  let timeout;
+  passwordInput.addEventListener('input', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(updatePasswordStrength, 500);
+  });
+
+  passwordInput.after(criteriaList);
+  updatePasswordStrength();
+</script>
